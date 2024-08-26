@@ -1,4 +1,4 @@
-package com.movieproject.operations;
+package com.movieproject.contexts;
 
 import com.movieproject.interfaces.ReportStrategy;
 

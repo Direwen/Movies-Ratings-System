@@ -1,4 +1,4 @@
-package com.movieproject.processors;
+package com.movieproject.interfaces;
 
 public interface RecordProcessor {
     void process(String[] var1);

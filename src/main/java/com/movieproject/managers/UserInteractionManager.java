@@ -27,6 +27,11 @@ public class UserInteractionManager {
         return this.readInteger("Enter ID of the record to delete: ");
     }
 
+    public int getUserId()
+    {
+        return this.readInteger("Enter User ID");
+    }
+
     private int readInteger(String promptMsg) {
         while(true) {
             try {

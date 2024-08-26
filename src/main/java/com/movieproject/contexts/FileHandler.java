@@ -1,6 +1,9 @@
-package com.movieproject.operations;
+package com.movieproject.contexts;
 
 import com.movieproject.interfaces.FileOperation;
+import com.movieproject.operations.FileDeleteOperation;
+import com.movieproject.operations.FileUpdateOperation;
+
 import java.io.File;
 import java.io.IOException;
 

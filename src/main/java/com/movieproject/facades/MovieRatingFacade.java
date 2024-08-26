@@ -1,10 +1,10 @@
 package com.movieproject.facades;
 
+import com.movieproject.contexts.ReportHandler;
 import com.movieproject.managers.CsvManager;
 import com.movieproject.managers.UserInteractionManager;
 import com.movieproject.models.MovieRatingRecord;
-import com.movieproject.operations.RatingCountOperation;
-import com.movieproject.operations.ReportHandler;
+import com.movieproject.operations.*;
 
 public class MovieRatingFacade {
     private CsvManager csvManager;
@@ -38,5 +38,25 @@ public class MovieRatingFacade {
     public void countRatings()
     {
         reportHandler.execute(new RatingCountOperation());
+    }
+
+    public void countUserRatings()
+    {
+        reportHandler.execute(new CountUserRatingOperation(this.userInteractionManager.getUserId()));
+    }
+
+    public void countUsersRatings()
+    {
+        reportHandler.execute(new CountUserRatingOperation());
+    }
+
+    public void listMoviesByGenres()
+    {
+        reportHandler.execute(new ListMoviesByGenreOperation());
+    }
+
+    public void listMoviesRatedByUser()
+    {
+        reportHandler.execute(new ListAllMoviesUserRatedOperation(this.userInteractionManager.getUserId()));
     }
 }

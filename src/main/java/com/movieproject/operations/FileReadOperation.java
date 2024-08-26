@@ -1,7 +1,7 @@
 package com.movieproject.operations;
 
 import com.movieproject.interfaces.FileOperation;
-import com.movieproject.processors.RecordProcessor;
+import com.movieproject.interfaces.RecordProcessor;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 

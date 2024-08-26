@@ -7,7 +7,7 @@ import com.movieproject.interfaces.Updateable;
 import com.movieproject.models.MovieRatingRecord;
 import com.movieproject.operations.FileAppendOperation;
 import com.movieproject.operations.FileDeleteOperation;
-import com.movieproject.operations.FileHandler;
+import com.movieproject.contexts.FileHandler;
 import com.movieproject.operations.FileReadOperation;
 import com.movieproject.operations.FileUpdateOperation;
 import java.io.File;
