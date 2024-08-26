@@ -21,7 +21,13 @@ public class CsvManager implements Createable<MovieRatingRecord>, Readable, Upda
     }
 
     public void create(MovieRatingRecord newRecord) {
-        this.fileHandler.performOperation(new FileAppendOperation(new String[]{Integer.toString(newRecord.recordId), Integer.toString(newRecord.userId), newRecord.movieName, Float.toString(newRecord.rating), String.join("|", newRecord.genres)}));
+        this.fileHandler.performOperation(new FileAppendOperation(new String[]{
+                Integer.toString(newRecord.recordId),
+                Integer.toString(newRecord.userId),
+                newRecord.movieName,
+                Float.toString(newRecord.rating),
+                String.join("|", newRecord.genres)
+        }));
     }
 
     public void read() {
@@ -38,7 +44,6 @@ public class CsvManager implements Createable<MovieRatingRecord>, Readable, Upda
                 record[3] = Float.toString(recordToUpdate.rating);
                 record[4] = String.join("|", recordToUpdate.genres);
             }
-
         }));
     }
 

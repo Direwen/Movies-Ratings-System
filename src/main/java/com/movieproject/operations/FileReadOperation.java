@@ -4,6 +4,7 @@ import com.movieproject.interfaces.FileOperation;
 import com.movieproject.processors.RecordProcessor;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,32 +16,17 @@ public class FileReadOperation implements FileOperation {
         this.processor = processor;
     }
 
+    @Override
     public void execute(File file) throws IOException {
-        try {
-            CSVReader reader = new CSVReader(new FileReader(file));
+        try (CSVReader reader = new CSVReader(new FileReader(file))) {
+            reader.readNext(); // Skip the header
 
-            try {
-                reader.readNext();
-
-                String[] nextLine;
-                while((nextLine = reader.readNext()) != null) {
-                    this.processor.process(nextLine);
-                }
-            } catch (Throwable var6) {
-                try {
-                    reader.close();
-                } catch (Throwable var5) {
-                    var6.addSuppressed(var5);
-                }
-
-                throw var6;
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                processor.process(nextLine);
             }
-
-            reader.close();
-        } catch (CsvValidationException var7) {
-            CsvValidationException e = var7;
+        } catch (CsvValidationException e) {
             e.printStackTrace();
         }
-
     }
 }

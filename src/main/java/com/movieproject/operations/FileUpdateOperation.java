@@ -20,50 +20,20 @@ public class FileUpdateOperation implements FileOperation {
     }
 
     public void execute(File file) throws IOException {
-        try {
-            CSVReader reader = new CSVReader(new FileReader(file));
 
-            try {
-                CSVWriter writer = new CSVWriter(new FileWriter(this.tempFile));
-
-                try {
-                    String[] header = reader.readNext();
-                    writer.writeNext(header);
-
-                    String[] nextLine;
-                    while((nextLine = reader.readNext()) != null) {
-                        this.updater.update(nextLine);
-                        writer.writeNext(nextLine);
-                    }
-
-                    if (file.delete()) {
-                        this.tempFile.renameTo(file);
-                    }
-                } catch (Throwable var8) {
-                    try {
-                        writer.close();
-                    } catch (Throwable var7) {
-                        var8.addSuppressed(var7);
-                    }
-
-                    throw var8;
-                }
-
-                writer.close();
-            } catch (Throwable var9) {
-                try {
-                    reader.close();
-                } catch (Throwable var6) {
-                    var9.addSuppressed(var6);
-                }
-
-                throw var9;
+        try (
+                CSVReader reader = new CSVReader(new FileReader(file));
+                CSVWriter writer = new CSVWriter(new FileWriter(this.tempFile))
+        ) {
+            String[] header = reader.readNext();
+            writer.writeNext(header);
+            String[] nextLine;
+            while((nextLine = reader.readNext()) != null) {
+                this.updater.update(nextLine);
+                writer.writeNext(nextLine);
             }
-
-            reader.close();
-        } catch (CsvValidationException | IOException var10) {
-            Exception e = var10;
-            e.printStackTrace();
+        } catch (CsvValidationException | IOException err) {
+            err.printStackTrace();
         }
 
     }

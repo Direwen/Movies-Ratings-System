@@ -29,9 +29,8 @@ public class FileHandler {
 
         try {
             operation.execute(mainFile);
-            if (operation instanceof FileUpdateOperation || operation instanceof FileDeleteOperation) {
+            if (operation instanceof FileUpdateOperation || operation instanceof FileDeleteOperation)
                 this.replaceMainFile();
-            }
         } catch (IOException var5) {
             IOException e = var5;
             e.printStackTrace();
