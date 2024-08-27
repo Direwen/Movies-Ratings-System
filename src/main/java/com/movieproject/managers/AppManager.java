@@ -1,16 +1,25 @@
 package com.movieproject.managers;
 
+import com.movieproject.contexts.FileHandler;
 import com.movieproject.facades.MovieRatingFacade;
 import java.util.Scanner;
 
 public class AppManager {
+    private static AppManager instance;
     private MovieRatingFacade service;
     private Scanner scanner;
 
-    public AppManager(String filepath)
+    private AppManager(FileHandler fileHandler)
     {
         this.scanner = new Scanner(System.in);
-        this.service = new MovieRatingFacade(filepath);
+        this.service = MovieRatingFacade.getInstance(fileHandler, this.scanner);
+    }
+
+    public static AppManager getInstance(FileHandler fileHandler)
+    {
+        if (instance == null)
+            instance = new AppManager(fileHandler);
+        return instance;
     }
 
     private String displayMenu() {

@@ -6,13 +6,13 @@ public class ReportHandler {
 
     private FileHandler fileHandler;
 
-    public ReportHandler(String filepath)
+    public ReportHandler(FileHandler fileHandler)
     {
-        this.fileHandler = new FileHandler(filepath);
+        this.fileHandler = fileHandler;
     }
 
-    public void execute(ReportStrategy strategy)
+    public boolean execute(ReportStrategy strategy)
     {
-        strategy.generateReport(this.fileHandler);
+        return strategy.generateReport(this.fileHandler);
     }
 }

@@ -1,11 +1,12 @@
 package com.movieproject.operations;
 
 import com.movieproject.contexts.FileHandler;
+import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
 
 import java.util.*;
 
-public class ListMoviesByUserIdOperation implements ReportStrategy {
+public class ListMoviesByUserIdOperation implements ReportStrategy, ReportPrinter<HashMap<String, Float>> {
 
     private int userId;
     private HashMap<String, Float> moviesHashMap;
@@ -17,22 +18,22 @@ public class ListMoviesByUserIdOperation implements ReportStrategy {
     }
 
     @Override
-    public void generateReport(FileHandler fileHandler)
+    public boolean generateReport(FileHandler fileHandler)
     {
-        fileHandler.performOperation(new FileReadOperation( (record) -> {
-            if (record[1].equals(Integer.toString(userId)))
-                this.moviesHashMap.put(record[2], Float.parseFloat(record[3]));
+        boolean success = fileHandler.performOperation(new FileReadOperation( (record) -> {
+            if (record[1].equals(Integer.toString(userId))) this.moviesHashMap.put(record[2], Float.parseFloat(record[3]));
         }));
-        this.printResults();
+
+        if (success) printReportResult(moviesHashMap);
+        return success;
     }
 
-    private void printResults()
+    @Override
+    public void printReportResult(HashMap<String, Float> moviesHashMap)
     {
         System.out.println("All Movies Rated by User ID " + this.userId);
         for(Map.Entry<String, Float> entry : bubbleSort())
-        {
             System.out.println("Movie : " + entry.getKey() + " | Rating : " + entry.getValue());
-        }
     }
 
     private ArrayList<Map.Entry<String, Float>> bubbleSort()

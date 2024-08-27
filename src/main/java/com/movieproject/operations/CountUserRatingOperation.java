@@ -1,55 +1,45 @@
 package com.movieproject.operations;
 
 import com.movieproject.contexts.FileHandler;
+import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
 import java.util.HashMap;
 
-public class CountUserRatingOperation implements ReportStrategy {
+public class CountUserRatingOperation implements ReportStrategy, ReportPrinter<HashMap<String, Integer>> {
 
-    private int userId;
-    private int count;
-    private boolean isForAllUsers = true;
-    private HashMap<String, Integer> countsHashMap;
+    private final Integer userId;
+    private final boolean isForAllUsers;
+    private final HashMap<String, Integer> countsHashMap = new HashMap<>();
 
-    // Constructor for counting all users' ratings
-    public CountUserRatingOperation() {
-        this.countsHashMap = new HashMap<>();
+    public CountUserRatingOperation()
+    {
+        this.userId = null;
+        this.isForAllUsers = true;
     }
 
-    // Constructor for counting ratings for a specific user
-    public CountUserRatingOperation(int userId) {
+    public CountUserRatingOperation(int userId)
+    {
         this.userId = userId;
         this.isForAllUsers = false;
     }
 
     @Override
-    public void generateReport(FileHandler fileHandler) {
-        if (isForAllUsers) {
-            // Counting ratings for all users
-            fileHandler.performOperation(new FileReadOperation((record) -> {
-                String userId = record[1];
-                countsHashMap.put(userId, countsHashMap.getOrDefault(userId, 0) + 1);
-            }));
-        } else {
-            // Counting ratings for a specific user
-            fileHandler.performOperation(new FileReadOperation((record) -> {
-                if (record[1].equals(Integer.toString(this.userId))) {
-                    count++;
-                }
-            }));
-        }
+    public boolean generateReport(FileHandler fileHandler)
+    {
+        boolean success = fileHandler.performOperation(new FileReadOperation((record) -> {
+            if (isForAllUsers) countsHashMap.put(record[1], countsHashMap.getOrDefault(record[1], 0) + 1);
+            else if (record[1].equals(userId.toString())) countsHashMap.put(record[1], countsHashMap.getOrDefault(record[1], 0) + 1);
+        }));
 
-        this.printResults();
+        if (success) printReportResult(countsHashMap);
+        return success;
     }
 
-    private void printResults() {
-        if (isForAllUsers) {
-            System.out.println("Ratings count for all users:");
-            for (HashMap.Entry<String, Integer> entry : countsHashMap.entrySet())
-                System.out.println("User ID " + entry.getKey() + " rated " + entry.getValue() + " movies.");
-
-        } else {
-            System.out.println("The number of times User ID " + this.userId + " rated: " + this.count);
-        }
+    @Override
+    public void printReportResult(HashMap<String, Integer> countsHashMap)
+    {
+        if (isForAllUsers) countsHashMap.forEach((key, value) -> System.out.printf("User ID %s rated %d movies.%n", key, value));
+        else System.out.printf("The number of times User ID %s rated: %d%n", userId, countsHashMap.getOrDefault(userId.toString(), 0));
     }
 }
+

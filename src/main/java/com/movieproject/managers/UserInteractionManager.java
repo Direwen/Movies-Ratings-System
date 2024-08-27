@@ -11,19 +11,23 @@ public class UserInteractionManager {
     private static final float RATING_MAX = 5.0F;
     private Scanner scanner;
 
-    public UserInteractionManager() {
-        this.scanner = new Scanner(System.in);
+    public UserInteractionManager(Scanner scanner)
+    {
+        this.scanner = scanner;
     }
 
-    public MovieRatingRecord createRecord() {
+    public MovieRatingRecord createRecord()
+    {
         return new MovieRatingRecord(this.readInteger("Enter Record ID: "), this.readInteger("Enter User ID: "), this.readString("Enter Movie Name: "), this.readFloat("Enter Rating (0.0 - 5.0): ", 0.0F, 5.0F), this.readGenres("Enter Genres (separated by '|'): "));
     }
 
-    public MovieRatingRecord updateRecord() {
+    public MovieRatingRecord updateRecord()
+    {
         return new MovieRatingRecord(this.readInteger("Enter ID of the record to Update: "), this.readInteger("Enter new User ID: "), this.readString("Enter new Movie Name: "), this.readFloat("Enter new Rating (0.0 - 5.0): ", 0.0F, 5.0F), this.readGenres("Enter new Genres (separated by '|'): "));
     }
 
-    public int deleteRecord() {
+    public int deleteRecord()
+    {
         return this.readInteger("Enter ID of the record to delete: ");
     }
 
@@ -37,18 +41,20 @@ public class UserInteractionManager {
         return this.readString("Enter The Movie Name");
     }
 
-    private int readInteger(String promptMsg) {
+    private int readInteger(String promptMsg)
+    {
         while(true) {
             try {
                 System.out.print(promptMsg + " >>> ");
                 return Integer.parseInt(this.scanner.nextLine());
-            } catch (Exception var3) {
+            } catch (Exception err) {
                 System.out.println("Invalid input. Please Enter a valid number.");
             }
         }
     }
 
-    private float readFloat(String promptMsg, float min, float max) {
+    private float readFloat(String promptMsg, float min, float max)
+    {
         while(true) {
             try {
                 System.out.print(promptMsg + " >>> ");
@@ -58,13 +64,14 @@ public class UserInteractionManager {
                 }
 
                 throw new Exception();
-            } catch (Exception var5) {
+            } catch (Exception err) {
                 System.out.println("Invalid input. Please Enter a valid number between " + min + " and " + max);
             }
         }
     }
 
-    private String readString(String promptMsg) {
+    private String readString(String promptMsg)
+    {
         while(true) {
             try {
                 System.out.print(promptMsg + " >>> ");
@@ -74,13 +81,14 @@ public class UserInteractionManager {
                 }
 
                 return value;
-            } catch (Exception var3) {
+            } catch (Exception err) {
                 System.out.println("Invalid input. Please enter a valid text.");
             }
         }
     }
 
-    private String readGenres(String promptMsg) {
+    private String readGenres(String promptMsg)
+    {
         while(true) {
             try {
                 String value = this.readString(promptMsg);
@@ -89,7 +97,7 @@ public class UserInteractionManager {
                 }
 
                 return this.formatGenres(value);
-            } catch (Exception var3) {
+            } catch (Exception err) {
                 System.out.println("Invalid Format. Please enter Genres like this example: Comedy|Horror|Action");
             }
         }
@@ -99,7 +107,8 @@ public class UserInteractionManager {
         return input.matches("^[\\w\\s]+(\\|[\\w\\s]+)*$");
     }
 
-    private String formatGenres(String input) {
+    private String formatGenres(String input)
+    {
         String[] genresArray = input.split("\\|");
 
         for(int i = 0; i < genresArray.length; ++i) {
@@ -109,7 +118,8 @@ public class UserInteractionManager {
         return (String)(new HashSet(Arrays.asList(genresArray))).stream().collect(Collectors.joining("|"));
     }
 
-    private String capitalizeFirstLetter(String genre) {
+    private String capitalizeFirstLetter(String genre)
+    {
         if (genre != null && !genre.isEmpty()) {
             String var10000 = genre.substring(0, 1).toUpperCase();
             return var10000 + genre.substring(1).toLowerCase();

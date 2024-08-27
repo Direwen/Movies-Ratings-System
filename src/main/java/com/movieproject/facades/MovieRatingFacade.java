@@ -1,38 +1,51 @@
 package com.movieproject.facades;
 
+import com.movieproject.contexts.FileHandler;
 import com.movieproject.contexts.ReportHandler;
-import com.movieproject.managers.CsvManager;
+import com.movieproject.managers.CrudManager;
 import com.movieproject.managers.UserInteractionManager;
 import com.movieproject.models.MovieRatingRecord;
 import com.movieproject.operations.*;
 
+import java.util.Scanner;
+
 public class MovieRatingFacade {
-    private CsvManager csvManager;
+    private static MovieRatingFacade instance;
+    private CrudManager crudManager;
     private UserInteractionManager userInteractionManager;
     private ReportHandler reportHandler;
 
-    public MovieRatingFacade(String filepath) {
-        this.csvManager = new CsvManager(filepath);
-        this.userInteractionManager = new UserInteractionManager();
-        this.reportHandler = new ReportHandler(filepath);
+    private MovieRatingFacade(FileHandler fileHandler, Scanner scanner)
+    {
+        this.crudManager = new CrudManager(fileHandler);
+        this.reportHandler = new ReportHandler(fileHandler);
+        this.userInteractionManager = new UserInteractionManager(scanner);
     }
 
-    public void createRecord() {
+    public static MovieRatingFacade getInstance(FileHandler fileHandler, Scanner scanner)
+    {
+        if (instance == null)
+            instance = new MovieRatingFacade(fileHandler, scanner);
+        return instance;
+    }
+
+    public void createRecord()
+    {
         MovieRatingRecord newRecord = this.userInteractionManager.createRecord();
-        this.csvManager.create(newRecord);
+        this.crudManager.create(newRecord);
     }
 
     public void showAllRecords() {
-        this.csvManager.read();
+        this.crudManager.read();
     }
 
     public void updateRecord() {
         MovieRatingRecord updatedRecord = this.userInteractionManager.updateRecord();
-        this.csvManager.update(updatedRecord);
+        this.crudManager.update(updatedRecord);
     }
 
     public void deleteRecord() {
-        this.csvManager.delete(this.userInteractionManager.deleteRecord());
+        this.crudManager.delete(this.userInteractionManager.deleteRecord());
     }
 
     public void countUserRatings()
@@ -62,6 +75,7 @@ public class MovieRatingFacade {
 
     public void searchRecordsByMovieName()
     {
-        reportHandler.execute(new SearchRecordsOperation(this.userInteractionManager.getMovieName()));
+        boolean isFound = reportHandler.execute(new SearchRecordsOperation(this.userInteractionManager.getMovieName()));
+        if (!isFound) System.out.println("No records found");
     }
 }

@@ -17,16 +17,18 @@ public class FileReadOperation implements FileOperation {
     }
 
     @Override
-    public void execute(File file) throws IOException {
+    public boolean execute(File file) throws IOException {
         try (CSVReader reader = new CSVReader(new FileReader(file))) {
-            reader.readNext(); // Skip the header
-
+            // Skip the header by reading
+            reader.readNext();
             String[] nextLine;
             while ((nextLine = reader.readNext()) != null) {
                 processor.process(nextLine);
             }
-        } catch (CsvValidationException e) {
-            e.printStackTrace();
+            return true;
+        } catch (Exception err) {
+            System.out.println("Error occured during the process of reading records : " + err.getMessage());
+            return false;
         }
     }
 }

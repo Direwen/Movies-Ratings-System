@@ -19,24 +19,37 @@ public class FileDeleteOperation implements FileOperation {
     }
 
     @Override
-    public void execute(File file) throws IOException {
+    public boolean execute(File file) throws IOException {
         File tempFile = new File(this.tempFilePath);
 
         try (
                 CSVReader reader = new CSVReader(new FileReader(file));
                 CSVWriter writer = new CSVWriter(new FileWriter(tempFile))
         ) {
-            String[] header = reader.readNext(); // Read and write header
+            // Read and write header
+            String[] header = reader.readNext();
             writer.writeNext(header);
-
             String[] nextLine;
-            while ((nextLine = reader.readNext()) != null) {
+            boolean isDeleted = false;
+            while ((nextLine = reader.readNext()) != null)
+            {
                 if (!nextLine[0].equals(Integer.toString(this.recordId))) {
                     writer.writeNext(nextLine);
+                } else {
+                    isDeleted = true;
                 }
             }
-        } catch (CsvValidationException | IOException err) {
-            err.printStackTrace();
+
+            //Checking if the file was actually deleted
+            if (isDeleted) {
+                return true;
+            } else {
+                throw new Exception("A record with " + this.recordId + " ID wasn't found");
+            }
+
+        } catch (Exception err) {
+            System.out.println("Error occured during the process of reading records : " + err.getMessage());
+            return false;
         }
     }
 }
