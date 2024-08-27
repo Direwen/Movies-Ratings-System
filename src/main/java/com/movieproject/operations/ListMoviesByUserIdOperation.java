@@ -5,12 +5,12 @@ import com.movieproject.interfaces.ReportStrategy;
 
 import java.util.*;
 
-public class ListAllMoviesUserRatedOperation implements ReportStrategy {
+public class ListMoviesByUserIdOperation implements ReportStrategy {
 
     private int userId;
     private HashMap<String, Float> moviesHashMap;
 
-    public ListAllMoviesUserRatedOperation(int userId)
+    public ListMoviesByUserIdOperation(int userId)
     {
         this.userId = userId;
         this.moviesHashMap = new HashMap<>();

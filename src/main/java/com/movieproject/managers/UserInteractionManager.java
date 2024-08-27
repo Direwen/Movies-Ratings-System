@@ -32,6 +32,11 @@ public class UserInteractionManager {
         return this.readInteger("Enter User ID");
     }
 
+    public String getMovieName()
+    {
+        return this.readString("Enter The Movie Name");
+    }
+
     private int readInteger(String promptMsg) {
         while(true) {
             try {

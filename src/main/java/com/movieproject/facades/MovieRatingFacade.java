@@ -35,11 +35,6 @@ public class MovieRatingFacade {
         this.csvManager.delete(this.userInteractionManager.deleteRecord());
     }
 
-    public void countRatings()
-    {
-        reportHandler.execute(new RatingCountOperation());
-    }
-
     public void countUserRatings()
     {
         reportHandler.execute(new CountUserRatingOperation(this.userInteractionManager.getUserId()));
@@ -57,6 +52,16 @@ public class MovieRatingFacade {
 
     public void listMoviesRatedByUser()
     {
-        reportHandler.execute(new ListAllMoviesUserRatedOperation(this.userInteractionManager.getUserId()));
+        reportHandler.execute(new ListMoviesByUserIdOperation(this.userInteractionManager.getUserId()));
+    }
+
+    public void searchRecordsByUserId()
+    {
+        reportHandler.execute(new SearchRecordsOperation(this.userInteractionManager.getUserId()));
+    }
+
+    public void searchRecordsByMovieName()
+    {
+        reportHandler.execute(new SearchRecordsOperation(this.userInteractionManager.getMovieName()));
     }
 }
