@@ -44,7 +44,8 @@ public class FileDeleteOperation implements FileOperation {
             if (isDeleted) {
                 return true;
             } else {
-                throw new Exception("A record with " + this.recordId + " ID wasn't found");
+                System.out.println("A record with " + this.recordId + " ID wasn't found");
+                return false;
             }
 
         } catch (Exception err) {

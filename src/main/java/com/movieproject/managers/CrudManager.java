@@ -10,7 +10,6 @@ import com.movieproject.operations.FileDeleteOperation;
 import com.movieproject.contexts.FileHandler;
 import com.movieproject.operations.FileReadOperation;
 import com.movieproject.operations.FileUpdateOperation;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,8 +36,11 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
      * Creates a new MovieRatingRecord by appending it to the file.
      *
      * @param newRecord the MovieRatingRecord to be created.
+     * @return true if the record was successfully created, false otherwise.
      */
-    public void create(String[] newRecord) {
+    @Override
+    public boolean create(String[] newRecord)
+    {
         ArrayList<MovieRatingRecord> list = new ArrayList<>();
         AtomicBoolean isRecordIdUnique = new AtomicBoolean(true);
 
@@ -52,60 +54,77 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
 
         if (isRecordIdUnique.get()) {
             if (this.fileHandler.getValidator().isUserRatingAllowed(list, newRecord)) {
-                if (this.fileHandler.performOperation(new FileAppendOperation(newRecord))) {
-                    System.out.println("Created a record");
-                } else {
-                    System.out.println("Failed to create a record");
-                }
-            } else {
-                System.out.println("User can't rate the same movie twice");
-            }
-        } else {
-            System.out.println("Record ID is not unique");
-        }
+                boolean result = this.fileHandler.performOperation(new FileAppendOperation(newRecord));
+                if (result) {
+                    System.out.println("Record successfully created.");
+                    return true;
+                } else System.out.println("Failed to create record.");
+            } else System.out.println("User can't rate the same movie twice.");
+        } else System.out.println("Record ID is not unique.");
+        return false;
     }
 
     /**
      * Reads all records from the file and prints them to the console.
+     * @return true if records were successfully read, false otherwise.
      */
-    public void read()
+    @Override
+    public boolean read()
     {
+        AtomicBoolean isReadSuccessful = new AtomicBoolean(false);
         this.fileHandler.performOperation(new FileReadOperation((record) -> {
             System.out.println(Arrays.toString(record));
+            isReadSuccessful.set(true);
         }));
+        if (isReadSuccessful.get()) {
+            System.out.println("Records successfully read.");
+            return true;
+        }
+        System.out.println("No records found.");
+        return false;
     }
 
     /**
      * Updates an existing MovieRatingRecord in the file.
      *
      * @param recordToUpdate the MovieRatingRecord with updated information.
+     * @return true if the record was successfully updated, false otherwise.
      */
-    public void update(String[] recordToUpdate) {
-        if (this.fileHandler.performOperation(new FileUpdateOperation(new File(this.fileHandler.getTempFilePath()), (record) -> {
+    @Override
+    public boolean update(String[] recordToUpdate)
+    {
+        boolean result = this.fileHandler.performOperation(new FileUpdateOperation(this.fileHandler.getTempFilePath(), (record) -> {
             if (record[0].equals(recordToUpdate[0]) && record[3].equals(recordToUpdate[3]) && record[4].equals(recordToUpdate[4])) {
-                System.out.println("Update ignored - No changes detected or attempting to rate the same movie twice");
+                System.out.println("Update ignored - No changes detected or attempting to rate the same movie twice.");
             } else if (record[0].equals(recordToUpdate[0])) {
                 record[3] = recordToUpdate[3];
                 record[4] = recordToUpdate[4];
             }
-        }))) {
-            System.out.println("Updated the record");
-        } else {
-            System.out.println("No updates were made to the record");
+        }));
+
+        if (result) {
+            System.out.println("Record successfully updated.");
+            return true;
         }
+        System.out.println("Failed to update record.");
+        return false;
     }
 
     /**
      * Deletes a MovieRatingRecord from the file based on its record ID.
      *
      * @param recordId the ID of the record to be deleted.
+     * @return true if the record was successfully deleted, false otherwise.
      */
-    public void delete(int recordId)
+    @Override
+    public boolean delete(int recordId)
     {
-        if (this.fileHandler.performOperation(new FileDeleteOperation(recordId, this.fileHandler.getTempFilePath()))) {
-            System.out.println("Deleted the record");
-        } else {
-            System.out.println("Failed to delete the record");
+        boolean result = this.fileHandler.performOperation(new FileDeleteOperation(recordId, this.fileHandler.getTempFilePath()));
+        if (result) {
+            System.out.println("Record successfully deleted.");
+            return true;
         }
+        System.out.println("Failed to delete record.");
+        return false;
     }
 }

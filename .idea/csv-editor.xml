@@ -10,7 +10,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\data\Test_Movie_Dataset.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\data\movies_dataset.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\data\temp_data.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

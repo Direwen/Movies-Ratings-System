@@ -13,22 +13,23 @@ import java.util.Arrays;
 
 public class FileUpdateOperation implements FileOperation {
     private RecordUpdater updater;
-    private File tempFile;
+    private String tempFilePath;
 
-    public FileUpdateOperation(File tempFile, RecordUpdater updater) {
-        this.tempFile = tempFile;
+    public FileUpdateOperation(String tempFilePath, RecordUpdater updater) {
+        this.tempFilePath = tempFilePath;
         this.updater = updater;
     }
 
     @Override
     public boolean execute(File file) throws IOException
     {
+        File tempFile = new File(this.tempFilePath);
         boolean isUpdated = false;
         String[] clonedRecord;
 
         try (
                 CSVReader reader = new CSVReader(new FileReader(file));
-                CSVWriter writer = new CSVWriter(new FileWriter(this.tempFile))
+                CSVWriter writer = new CSVWriter(new FileWriter(tempFile))
         ) {
             // Read and write header
             String[] header = reader.readNext();

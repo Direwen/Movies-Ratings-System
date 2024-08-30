@@ -65,7 +65,10 @@ public class FileHandler {
             if (success && (operation instanceof FileUpdateOperation || operation instanceof FileDeleteOperation)) {
                 return replaceMainFile();
             }
+
+            deleteTempFile(); // Ensure temp file is deleted on error
             return success;
+
         } catch (IOException e) {
             System.out.println("Error occurred during file operation: " + e.getMessage());
             deleteTempFile(); // Ensure temp file is deleted on error

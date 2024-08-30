@@ -54,7 +54,8 @@ public class MovieRatingFacade {
     /**
      * Displays all movie rating records by delegating the task to the CrudManager.
      */
-    public void showAllRecords() {
+    public void showAllRecords()
+    {
         this.crudManager.read();
     }
 
@@ -62,7 +63,8 @@ public class MovieRatingFacade {
      * Updates an existing movie rating record by interacting with the user
      * and passing the updated record to the CrudManager.
      */
-    public void updateRecord() {
+    public void updateRecord()
+    {
         this.crudManager.update(this.userInteractionManager.updateRecord());
     }
 
@@ -70,7 +72,8 @@ public class MovieRatingFacade {
      * Deletes a movie rating record by interacting with the user to get the necessary details
      * and then passing the record to be deleted to the CrudManager.
      */
-    public void deleteRecord() {
+    public void deleteRecord()
+    {
         this.crudManager.delete(this.userInteractionManager.deleteRecord());
     }
 

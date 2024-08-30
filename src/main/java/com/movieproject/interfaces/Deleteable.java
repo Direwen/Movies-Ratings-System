@@ -1,5 +1,5 @@
 package com.movieproject.interfaces;
 
 public interface Deleteable {
-    void delete(int var1);
+    boolean delete(int var1);
 }
