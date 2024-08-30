@@ -80,20 +80,18 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
      *
      * @param recordToUpdate the MovieRatingRecord with updated information.
      */
-
-    public void update(String[] recordToUpdate)
-    {
+    public void update(String[] recordToUpdate) {
         if (this.fileHandler.performOperation(new FileUpdateOperation(new File(this.fileHandler.getTempFilePath()), (record) -> {
-            if (record[0].equals(recordToUpdate[0])) {
-                record[1] = recordToUpdate[1];
-                record[2] = recordToUpdate[2];
+            if (record[0].equals(recordToUpdate[0]) && record[3].equals(recordToUpdate[3]) && record[4].equals(recordToUpdate[4])) {
+                System.out.println("Update ignored - No changes detected or attempting to rate the same movie twice");
+            } else if (record[0].equals(recordToUpdate[0])) {
                 record[3] = recordToUpdate[3];
                 record[4] = recordToUpdate[4];
             }
         }))) {
             System.out.println("Updated the record");
         } else {
-            System.out.println("Failed to update the record");
+            System.out.println("No updates were made to the record");
         }
     }
 

@@ -50,8 +50,8 @@ public class UserInteractionManager {
     {
         return new String[]{
                 Integer.toString(this.readInteger("Enter ID of the record to Update: ")),
-                Integer.toString(this.readInteger("Enter User ID: ")),
-                this.readString("Enter Movie Name: "),
+                "",
+                "",
                 Float.toString(this.readFloat("Enter Rating (0.0 - 5.0): ", 0.0F, 5.0F)),
                 this.readGenres("Enter Genres (separated by '|'): ")
         };
@@ -184,7 +184,7 @@ public class UserInteractionManager {
      * @return true if the input is valid, false otherwise.
      */
     private boolean isGenresInputValid(String input) {
-        return input.matches("^[\\w\\s]+(\\|[\\w\\s]+)*$");
+        return input.matches("^[a-zA-Z\\s]+(\\|[a-zA-Z\\s]+)*$");
     }
 
     /**

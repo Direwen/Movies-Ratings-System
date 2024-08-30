@@ -44,8 +44,7 @@ public class FileUpdateOperation implements FileOperation {
                 writer.writeNext(nextLine);
             }
             //If updated, return true, if not, throw an exception to return false
-            if (isUpdated) return isUpdated;
-            else throw new Exception("The Record was not found.");
+            return isUpdated;
 
         } catch (Exception err) {
             System.out.println("Error occurred during the process of updating a record: " + err.getMessage());
