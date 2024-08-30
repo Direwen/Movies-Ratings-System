@@ -3,21 +3,22 @@ package com.movieproject.operations;
 import com.movieproject.contexts.FileHandler;
 import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
-import java.util.HashMap;
 
-public class CountUserRatingOperation implements ReportStrategy, ReportPrinter<HashMap<String, Integer>> {
+import java.util.*;
+
+public class CountMovieRatingRecordsOperation implements ReportStrategy, ReportPrinter<HashMap<String, Integer>> {
 
     private final Integer userId;
     private final boolean isForAllUsers;
     private final HashMap<String, Integer> countsHashMap = new HashMap<>();
 
-    public CountUserRatingOperation()
+    public CountMovieRatingRecordsOperation()
     {
         this.userId = null;
         this.isForAllUsers = true;
     }
 
-    public CountUserRatingOperation(int userId)
+    public CountMovieRatingRecordsOperation(int userId)
     {
         this.userId = userId;
         this.isForAllUsers = false;
@@ -38,7 +39,11 @@ public class CountUserRatingOperation implements ReportStrategy, ReportPrinter<H
     @Override
     public void printReportResult(HashMap<String, Integer> countsHashMap)
     {
-        if (isForAllUsers) countsHashMap.forEach((key, value) -> System.out.printf("User ID %s rated %d movies.%n", key, value));
+        if (isForAllUsers) {
+              List<Map.Entry<String, Integer>> list = new ArrayList<>(countsHashMap.entrySet());
+              Collections.sort(list, (e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+              list.forEach(entry -> System.out.printf("The number of times User ID %s rated: %d%n", entry.getKey(), entry.getValue()));
+        }
         else System.out.printf("The number of times User ID %s rated: %d%n", userId, countsHashMap.getOrDefault(userId.toString(), 0));
     }
 }

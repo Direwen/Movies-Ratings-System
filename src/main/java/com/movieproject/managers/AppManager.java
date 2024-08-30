@@ -4,6 +4,11 @@ import com.movieproject.contexts.FileHandler;
 import com.movieproject.facades.MovieRatingFacade;
 import java.util.Scanner;
 
+/**
+ * The AppManager class is responsible for managing the flow of the application.
+ * It interacts with the user, displays the menu, and processes user choices.
+ * This class follows the Singleton design pattern to ensure a single instance.
+ */
 public class AppManager {
     private static AppManager instance;
     private MovieRatingFacade service;
@@ -15,6 +20,13 @@ public class AppManager {
         this.service = MovieRatingFacade.getInstance(fileHandler, this.scanner);
     }
 
+    /**
+     * Returns the singleton instance of the AppManager.
+     * If no instance exists, it creates one using the provided FileHandler.
+     *
+     * @param fileHandler the FileHandler used to manage file operations.
+     * @return the singleton instance of AppManager.
+     */
     public static AppManager getInstance(FileHandler fileHandler)
     {
         if (instance == null)
@@ -22,6 +34,12 @@ public class AppManager {
         return instance;
     }
 
+    /**
+     * Displays the main menu of the application and prompts the user to enter their choice.
+     * Ensures that the input is valid (between 1 and 11).
+     *
+     * @return the user's choice as a string.
+     */
     private String displayMenu() {
         String userInput = null;
         boolean validOption = false;
@@ -37,9 +55,9 @@ public class AppManager {
             System.out.println("5. Search for a movie record by User ID");
             System.out.println("6. Search for a movie record by Movie Name");
             System.out.println("7. Count the number of ratings by a specific user");
-            System.out.println("8. Count the number of movies rated by each user");
+            System.out.println("8. Show All Sorted Movie Rating Records of a Specific User");
             System.out.println("9. List all movies grouped by their genre");
-            System.out.println("10. List all movies rated by a specific user");
+            System.out.println("10. List the total number of movies rated by each user sorted by movie counts");
             System.out.println("11. Exit");
             System.out.println("==================================================");
             System.out.print("Enter your choice (1-11): ");
@@ -47,7 +65,7 @@ public class AppManager {
             if (userInput.matches("[1-9]|10|11")) {
                 validOption = true;
             } else {
-                System.out.println("Invalid input. Please enter a number between 1 and 11.");
+                System.out.println("Invalid input. Please enter a number between 1 and 12.");
             }
         }
 
@@ -58,6 +76,11 @@ public class AppManager {
         return userInput;
     }
 
+    /**
+     * Processes the user's choice by calling the appropriate method in the MovieRatingFacade.
+     *
+     * @param choice the user's choice as a string.
+     */
     private void processUserChoice(String choice)
     {
         switch (choice)
@@ -81,16 +104,16 @@ public class AppManager {
                 this.service.searchRecordsByMovieName();
                 break;
             case "7":
-                this.service.countUserRatings();
+                this.service.countMovieRatingRecordsByUser();
                 break;
             case "8":
-                this.service.countUsersRatings();
+                this.service.listMoviesRatingRecordsByUser();
                 break;
             case "9":
                 this.service.listMoviesByGenres();
                 break;
             case "10":
-                this.service.listMoviesRatedByUser();
+                this.service.countMovieRatingRecordsByAllUsers();
                 break;
             case "11":
                 System.out.println("Exiting the application.");
@@ -102,6 +125,9 @@ public class AppManager {
         }
     }
 
+    /**
+     * Starts the application by continuously displaying the menu and processing user choices.
+     */
     public void run()
     {
         while (true)

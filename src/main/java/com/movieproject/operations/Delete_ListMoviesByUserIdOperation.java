@@ -6,12 +6,12 @@ import com.movieproject.interfaces.ReportStrategy;
 
 import java.util.*;
 
-public class ListMoviesByUserIdOperation implements ReportStrategy, ReportPrinter<HashMap<String, Float>> {
+public class Delete_ListMoviesByUserIdOperation implements ReportStrategy, ReportPrinter<HashMap<String, Float>> {
 
     private int userId;
     private HashMap<String, Float> moviesHashMap;
 
-    public ListMoviesByUserIdOperation(int userId)
+    public Delete_ListMoviesByUserIdOperation(int userId)
     {
         this.userId = userId;
         this.moviesHashMap = new HashMap<>();

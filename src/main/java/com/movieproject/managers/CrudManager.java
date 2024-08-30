@@ -11,30 +11,63 @@ import com.movieproject.contexts.FileHandler;
 import com.movieproject.operations.FileReadOperation;
 import com.movieproject.operations.FileUpdateOperation;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CrudManager implements Createable<MovieRatingRecord>, Readable, Updateable<MovieRatingRecord>, Deleteable {
+/**
+ * The CrudManager class is responsible for handling CRUD operations
+ * (Create, Read, Update, Delete) for MovieRatingRecord objects.
+ * It uses a FileHandler to perform file-based operations.
+ */
+public class CrudManager implements Createable<String[]>, Readable, Updateable<String[]>, Deleteable {
     private FileHandler fileHandler;
 
-    public CrudManager(FileHandler fileHandler) {
+    /**
+     * Constructor for CrudManager.
+     *
+     * @param fileHandler the FileHandler used to manage file operations.
+     */
+    public CrudManager(FileHandler fileHandler)
+    {
         this.fileHandler = fileHandler;
     }
 
-    public void create(MovieRatingRecord newRecord)
-    {
-        if  (this.fileHandler.performOperation(new FileAppendOperation(new String[]{
-                Integer.toString(newRecord.recordId),
-                Integer.toString(newRecord.userId),
-                newRecord.movieName,
-                Float.toString(newRecord.rating),
-                String.join("|", newRecord.genres)
-        }))) {
-            System.out.println("Created a record");
+    /**
+     * Creates a new MovieRatingRecord by appending it to the file.
+     *
+     * @param newRecord the MovieRatingRecord to be created.
+     */
+    public void create(String[] newRecord) {
+        ArrayList<MovieRatingRecord> list = new ArrayList<>();
+        AtomicBoolean isRecordIdUnique = new AtomicBoolean(true);
+
+        this.fileHandler.performOperation(new FileReadOperation((record) -> {
+            if (!this.fileHandler.getValidator().isRecordUnique(record, newRecord)) {
+                isRecordIdUnique.set(false);
+            } else if (record[1].equals(newRecord[1])) {
+                list.add(MovieRatingRecord.convertToObj(record));
+            }
+        }));
+
+        if (isRecordIdUnique.get()) {
+            if (this.fileHandler.getValidator().isUserRatingAllowed(list, newRecord)) {
+                if (this.fileHandler.performOperation(new FileAppendOperation(newRecord))) {
+                    System.out.println("Created a record");
+                } else {
+                    System.out.println("Failed to create a record");
+                }
+            } else {
+                System.out.println("User can't rate the same movie twice");
+            }
         } else {
-            System.out.println("Failed to Create a record");
+            System.out.println("Record ID is not unique");
         }
     }
 
+    /**
+     * Reads all records from the file and prints them to the console.
+     */
     public void read()
     {
         this.fileHandler.performOperation(new FileReadOperation((record) -> {
@@ -42,14 +75,20 @@ public class CrudManager implements Createable<MovieRatingRecord>, Readable, Upd
         }));
     }
 
-    public void update(MovieRatingRecord recordToUpdate)
+    /**
+     * Updates an existing MovieRatingRecord in the file.
+     *
+     * @param recordToUpdate the MovieRatingRecord with updated information.
+     */
+
+    public void update(String[] recordToUpdate)
     {
         if (this.fileHandler.performOperation(new FileUpdateOperation(new File(this.fileHandler.getTempFilePath()), (record) -> {
-            if (record[0].equals(Integer.toString(recordToUpdate.recordId))) {
-                record[1] = Integer.toString(recordToUpdate.userId);
-                record[2] = recordToUpdate.movieName;
-                record[3] = Float.toString(recordToUpdate.rating);
-                record[4] = String.join("|", recordToUpdate.genres);
+            if (record[0].equals(recordToUpdate[0])) {
+                record[1] = recordToUpdate[1];
+                record[2] = recordToUpdate[2];
+                record[3] = recordToUpdate[3];
+                record[4] = recordToUpdate[4];
             }
         }))) {
             System.out.println("Updated the record");
@@ -58,6 +97,11 @@ public class CrudManager implements Createable<MovieRatingRecord>, Readable, Upd
         }
     }
 
+    /**
+     * Deletes a MovieRatingRecord from the file based on its record ID.
+     *
+     * @param recordId the ID of the record to be deleted.
+     */
     public void delete(int recordId)
     {
         if (this.fileHandler.performOperation(new FileDeleteOperation(recordId, this.fileHandler.getTempFilePath()))) {
