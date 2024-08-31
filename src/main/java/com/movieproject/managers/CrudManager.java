@@ -72,16 +72,16 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
     public boolean read()
     {
         AtomicBoolean isReadSuccessful = new AtomicBoolean(false);
-        this.fileHandler.performOperation(new FileReadOperation((record) -> {
+        boolean success = this.fileHandler.performOperation(new FileReadOperation((record) -> {
             System.out.println(Arrays.toString(record));
             isReadSuccessful.set(true);
         }));
-        if (isReadSuccessful.get()) {
-            System.out.println("Records successfully read.");
+        if (success) {
+            if (isReadSuccessful.get()) System.out.println("Records successfully read.");
+            else System.out.println("No records found.");
             return true;
-        }
-        System.out.println("No records found.");
-        return false;
+        } else return false;
+
     }
 
     /**

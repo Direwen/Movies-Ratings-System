@@ -100,7 +100,9 @@ public class UserInteractionManager {
         while(true) {
             try {
                 System.out.print(promptMsg + " >>> ");
-                return Integer.parseInt(this.scanner.nextLine());
+                int value = Integer.parseInt(this.scanner.nextLine());
+                if (value > 0) return value;
+                else System.out.println("Invalid input. Please enter a positive number.");
             } catch (Exception err) {
                 System.out.println("Invalid input. Please Enter a valid number.");
             }
