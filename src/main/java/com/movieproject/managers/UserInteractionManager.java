@@ -94,12 +94,12 @@ public class UserInteractionManager {
      * @param promptMsg the message to prompt the user.
      * @return the valid integer entered by the user.
      */
-    private int readInteger(String promptMsg)
+    protected int readInteger(String promptMsg)
     {
         while(true) {
             try {
                 System.out.print(promptMsg + " >>> ");
-                int value = Integer.parseInt(this.scanner.nextLine());
+                int value = parseInteger(this.scanner.nextLine());
                 if (value > 0) return value;
                 else System.out.println("Invalid input. Please enter a positive number.");
             } catch (Exception err) {
@@ -116,12 +116,12 @@ public class UserInteractionManager {
      * @param max the maximum valid value.
      * @return the valid float entered by the user.
      */
-    private float readFloat(String promptMsg, float min, float max)
+    protected float readFloat(String promptMsg, float min, float max)
     {
         while(true) {
             try {
                 System.out.print(promptMsg + " >>> ");
-                float value = Float.parseFloat(this.scanner.nextLine());
+                float value = parseFloat(this.scanner.nextLine());
                 if (value >= min && value <= max) {
                     return value;
                 }
@@ -139,7 +139,7 @@ public class UserInteractionManager {
      * @param promptMsg the message to prompt the user.
      * @return the valid string entered by the user.
      */
-    private String readString(String promptMsg)
+    protected String readString(String promptMsg)
     {
         while(true) {
             try {
@@ -162,7 +162,7 @@ public class UserInteractionManager {
      * @param promptMsg the message to prompt the user.
      * @return the valid genres string entered by the user.
      */
-    private String readGenres(String promptMsg)
+    protected String readGenres(String promptMsg)
     {
         while(true) {
             try {
@@ -178,13 +178,32 @@ public class UserInteractionManager {
         }
     }
 
+    protected int parseInteger(String input)
+    {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return -1; // Return an invalid number to signify failure
+        }
+    }
+
+    protected float parseFloat(String input)
+    {
+        try {
+            return Float.parseFloat(input);
+        } catch (NumberFormatException e) {
+            return -1; // Return NaN to signify failure
+        }
+    }
+
     /**
      * Validates the genres input string.
      *
      * @param input the input string to validate.
      * @return true if the input is valid, false otherwise.
      */
-    private boolean isGenresInputValid(String input) {
+    protected boolean isGenresInputValid(String input)
+    {
         return input.matches("^[a-zA-Z\\s]+(\\|[a-zA-Z\\s]+)*$");
     }
 
@@ -194,7 +213,7 @@ public class UserInteractionManager {
      * @param input the input string to format.
      * @return the formatted genres string.
      */
-    private String formatGenres(String input)
+    protected String formatGenres(String input)
     {
         String[] genresArray = input.split("\\|");
 
