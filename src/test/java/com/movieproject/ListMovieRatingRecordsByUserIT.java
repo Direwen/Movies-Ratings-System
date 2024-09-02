@@ -9,9 +9,7 @@ import com.movieproject.validators.RecordValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ListMovieRatingRecordsByUserTest {
+class ListMovieRatingRecordsByUserIT {
 
     private static ReportHandler reportHandler;
 

@@ -1,6 +1,5 @@
 package com.movieproject.managers;
 
-import com.movieproject.models.MovieRatingRecord;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;

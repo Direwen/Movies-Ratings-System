@@ -4,34 +4,31 @@ import com.movieproject.contexts.FileHandler;
 import com.movieproject.contexts.ReportHandler;
 import com.movieproject.interfaces.Validator;
 import com.movieproject.models.MovieRatingRecord;
-import com.movieproject.operations.SearchRecordsOperation;
+import com.movieproject.operations.CountMovieRatingRecordsOperation;
 import com.movieproject.validators.RecordValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class SearchRecordsOperationTest {
+class CountMovieRatingRecordsOperationIT {
 
     private static ReportHandler reportHandler;
 
     @BeforeAll
-    static void init()
-    {
+    static void init() {
         Validator<MovieRatingRecord> recordValidator = new RecordValidator();
         FileHandler fileHandler = new FileHandler("./data/Sample_Movie_Dataset.csv", recordValidator);
         reportHandler = new ReportHandler(fileHandler);
     }
 
     @Test
-    void searchRecordsByUserId()
+    void countMovieRatingRecordsByUserId()
     {
-        reportHandler.execute(new SearchRecordsOperation(2));
+        reportHandler.execute(new CountMovieRatingRecordsOperation(1));
     }
 
     @Test
-    void searchRecordsByMovieName()
+    void countMovieRatingRecordsForAllUsers()
     {
-        reportHandler.execute(new SearchRecordsOperation("unknown"));
+        reportHandler.execute(new CountMovieRatingRecordsOperation());
     }
 }

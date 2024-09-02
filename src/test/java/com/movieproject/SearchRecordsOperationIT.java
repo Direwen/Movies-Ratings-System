@@ -3,35 +3,33 @@ package com.movieproject;
 import com.movieproject.contexts.FileHandler;
 import com.movieproject.contexts.ReportHandler;
 import com.movieproject.interfaces.Validator;
-import com.movieproject.managers.CrudManager;
 import com.movieproject.models.MovieRatingRecord;
-import com.movieproject.operations.CountMovieRatingRecordsOperation;
+import com.movieproject.operations.SearchRecordsOperation;
 import com.movieproject.validators.RecordValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class CountMovieRatingRecordsOperationTest {
+class SearchRecordsOperationIT {
 
     private static ReportHandler reportHandler;
 
     @BeforeAll
-    static void init() {
+    static void init()
+    {
         Validator<MovieRatingRecord> recordValidator = new RecordValidator();
         FileHandler fileHandler = new FileHandler("./data/Sample_Movie_Dataset.csv", recordValidator);
         reportHandler = new ReportHandler(fileHandler);
     }
 
     @Test
-    void countMovieRatingRecordsByUserId()
+    void searchRecordsByUserId()
     {
-        reportHandler.execute(new CountMovieRatingRecordsOperation(1));
+        reportHandler.execute(new SearchRecordsOperation(2));
     }
 
     @Test
-    void countMovieRatingRecordsForAllUsers()
+    void searchRecordsByMovieName()
     {
-        reportHandler.execute(new CountMovieRatingRecordsOperation());
+        reportHandler.execute(new SearchRecordsOperation("unknown"));
     }
 }

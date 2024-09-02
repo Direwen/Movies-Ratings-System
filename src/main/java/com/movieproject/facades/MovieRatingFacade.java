@@ -4,7 +4,6 @@ import com.movieproject.contexts.FileHandler;
 import com.movieproject.contexts.ReportHandler;
 import com.movieproject.managers.CrudManager;
 import com.movieproject.managers.UserInteractionManager;
-import com.movieproject.models.MovieRatingRecord;
 import com.movieproject.operations.*;
 
 import java.util.Scanner;

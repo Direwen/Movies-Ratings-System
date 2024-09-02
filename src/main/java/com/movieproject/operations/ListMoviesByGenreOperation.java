@@ -6,7 +6,6 @@ import com.movieproject.interfaces.ReportStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ListMoviesByGenreOperation implements ReportStrategy, ReportPrinter<HashMap<String, ArrayList<String>>> {
 

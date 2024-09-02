@@ -1,14 +1,10 @@
 package com.movieproject.operations;
 
 import com.movieproject.interfaces.FileOperation;
-import com.movieproject.models.MovieRatingRecord;
-import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class FileAppendOperation implements FileOperation {
     private String[] data;

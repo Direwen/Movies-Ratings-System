@@ -1,8 +1,7 @@
 package com.movieproject.models;
 
-import java.util.Arrays;
+
 import java.util.Comparator;
-import java.util.stream.Collectors;
 
 public class MovieRatingRecord implements Comparator<MovieRatingRecord> {
     public int recordId;

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CrudManagerTest {
+class CrudManagerIT {
 
     private static CrudManager crudManager;
 

@@ -30,24 +30,6 @@ public class FileHandler {
     }
 
     /**
-     * Gets the path of the temporary file.
-     *
-     * @return The path of the temporary file used during operations.
-     */
-    public String getTempFilePath() {
-        return this.tempFilePath;
-    }
-
-    /**
-     * Gets the path of the main file.
-     *
-     * @return The path of the main file to operate on.
-     */
-    public String getFilePath() {
-        return this.filePath;
-    }
-
-    /**
      * Executes the specified file operation. If the operation requires replacing the
      * original file (e.g., update or delete operations), the method ensures the main file
      * is replaced with the temp file.
@@ -106,6 +88,25 @@ public class FileHandler {
     }
 
     /**
+     * Gets the path of the temporary file.
+     *
+     * @return The path of the temporary file used during operations.
+     */
+    public String getTempFilePath() {
+        return this.tempFilePath;
+    }
+
+    /**
+     * Gets the path of the main file.
+     *
+     * @return The path of the main file to operate on.
+     */
+    public String getFilePath()
+    {
+        return this.filePath;
+    }
+
+    /**
      * Deletes the temporary file if it exists.
      *
      */
@@ -118,7 +119,8 @@ public class FileHandler {
         }
     }
 
-    public Validator getValidator() {
+    public Validator getValidator()
+    {
         return validator;
     }
 }

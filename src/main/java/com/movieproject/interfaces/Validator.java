@@ -1,6 +1,5 @@
 package com.movieproject.interfaces;
 
-import com.movieproject.models.MovieRatingRecord;
 
 import java.util.ArrayList;
 

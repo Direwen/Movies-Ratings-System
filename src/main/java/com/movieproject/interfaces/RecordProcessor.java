@@ -1,5 +1,5 @@
 package com.movieproject.interfaces;
 
 public interface RecordProcessor {
-    void process(String[] var1);
+    void process(String[] record);
 }

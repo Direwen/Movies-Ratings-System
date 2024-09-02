@@ -18,12 +18,6 @@ public class CountMovieRatingRecordsOperation implements ReportStrategy, ReportP
         this.isForAllUsers = true;
     }
 
-    public CountMovieRatingRecordsOperation(int userId)
-    {
-        this.userId = userId;
-        this.isForAllUsers = false;
-    }
-
     @Override
     public boolean generateReport(FileHandler fileHandler)
     {
@@ -45,6 +39,12 @@ public class CountMovieRatingRecordsOperation implements ReportStrategy, ReportP
               list.forEach(entry -> System.out.printf("The number of times User ID %s rated: %d%n", entry.getKey(), entry.getValue()));
         }
         else System.out.printf("The number of times User ID %s rated: %d%n", userId, countsHashMap.getOrDefault(userId.toString(), 0));
+    }
+
+    public CountMovieRatingRecordsOperation(int userId)
+    {
+        this.userId = userId;
+        this.isForAllUsers = false;
     }
 }
 

@@ -3,7 +3,6 @@ package com.movieproject.operations;
 import com.movieproject.interfaces.FileOperation;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
