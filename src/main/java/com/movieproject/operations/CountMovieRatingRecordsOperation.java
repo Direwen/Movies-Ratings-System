@@ -1,6 +1,7 @@
 package com.movieproject.operations;
 
 import com.movieproject.contexts.FileHandler;
+import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
 
@@ -8,14 +9,23 @@ import java.util.*;
 
 public class CountMovieRatingRecordsOperation implements ReportStrategy, ReportPrinter<HashMap<String, Integer>> {
 
+    private final TableDecorator tableDecorator;
     private final Integer userId;
     private final boolean isForAllUsers;
     private final HashMap<String, Integer> countsHashMap = new HashMap<>();
 
-    public CountMovieRatingRecordsOperation()
+    public CountMovieRatingRecordsOperation(TableDecorator tableDecorator)
     {
         this.userId = null;
         this.isForAllUsers = true;
+        this.tableDecorator = tableDecorator;
+    }
+
+    public CountMovieRatingRecordsOperation(int userId, TableDecorator tableDecorator)
+    {
+        this.userId = userId;
+        this.isForAllUsers = false;
+        this.tableDecorator = tableDecorator;
     }
 
     @Override
@@ -33,18 +43,17 @@ public class CountMovieRatingRecordsOperation implements ReportStrategy, ReportP
     @Override
     public void printReportResult(HashMap<String, Integer> countsHashMap)
     {
+        var table = this.tableDecorator.createTable();
         if (isForAllUsers) {
               List<Map.Entry<String, Integer>> list = new ArrayList<>(countsHashMap.entrySet());
               Collections.sort(list, (e1, e2) -> e2.getValue().compareTo(e1.getValue()));
-              list.forEach(entry -> System.out.printf("The number of times User ID %s rated: %d%n", entry.getKey(), entry.getValue()));
+              list.forEach(entry -> tableDecorator.add(table, "User ID: " + entry.getKey(), "Rating Count: " + entry.getValue()));
+
         }
-        else System.out.printf("The number of times User ID %s rated: %d%n", userId, countsHashMap.getOrDefault(userId.toString(), 0));
+        else tableDecorator.add(table, "User ID: " + userId, "Rating Count: " + countsHashMap.getOrDefault(userId.toString(), 0));
+
+        tableDecorator.render(table);
     }
 
-    public CountMovieRatingRecordsOperation(int userId)
-    {
-        this.userId = userId;
-        this.isForAllUsers = false;
-    }
 }
 

@@ -65,7 +65,7 @@ public class AppManager {
             if (userInput.matches("[1-9]|10|11")) {
                 validOption = true;
             } else {
-                System.out.println("Invalid input. Please enter a number between 1 and 12.");
+                System.out.println("Invalid input. Please enter a number between 1 and 11.");
             }
         }
 

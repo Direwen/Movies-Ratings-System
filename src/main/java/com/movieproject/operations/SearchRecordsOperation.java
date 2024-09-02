@@ -1,20 +1,25 @@
 package com.movieproject.operations;
 
 import com.movieproject.contexts.FileHandler;
+import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
+import de.vandermeer.asciitable.AsciiTable;
 
-public class SearchRecordsOperation implements ReportStrategy, ReportPrinter<String[]> {
+public class SearchRecordsOperation implements ReportStrategy, ReportPrinter<AsciiTable> {
 
+    private final TableDecorator tableDecorator;
     private Object value; // To accept String or Integer
 
-    public SearchRecordsOperation(String value)
+    public SearchRecordsOperation(String value, TableDecorator tableDecorator)
     {
+        this.tableDecorator = tableDecorator;
         this.value = value;
     }
 
-    public SearchRecordsOperation(int value)
+    public SearchRecordsOperation(int value, TableDecorator tableDecorator)
     {
+        this.tableDecorator = tableDecorator;
         this.value = value;
     }
 
@@ -22,11 +27,18 @@ public class SearchRecordsOperation implements ReportStrategy, ReportPrinter<Str
     public boolean generateReport(FileHandler fileHandler)
     {
         final boolean[] isMatchFound = {false};  // Use an array to hold the flag, as lambdas require variables to be final or effectively final
-
+        var table = tableDecorator.createTable();
         boolean success = fileHandler.performOperation(new FileReadOperation( (record) -> {
             try {
                 if (isMatch(record)) {
-                    printReportResult(record); // Using the default method from ReportStrategy
+                    tableDecorator.add(
+                            table,
+                            "Record " + record[0],
+                            "User ID " + record[1],
+                            record[2],
+                            record[3] + " ratings",
+                            String.join(", ", record[4])
+                    );
                     isMatchFound[0] = true;
                 }
             } catch (Exception e) {
@@ -34,15 +46,17 @@ public class SearchRecordsOperation implements ReportStrategy, ReportPrinter<Str
             }
         }));
 
+        if (!isMatchFound[0]) tableDecorator.add(table, "No Record Found");
+        printReportResult(table);
+
         return success && isMatchFound[0];  // Return true if operation was successful and a match was found
 
     }
 
     @Override
-    public void printReportResult(String[] record)
+    public void printReportResult(AsciiTable table)
     {
-        System.out.printf("Record ID: %s | User ID: %s | Movie Name: %s | Rating: %s | Genre: %s%n",
-                record[0], record[1], record[2], record[3], record[4]);
+        tableDecorator.render(table);
     }
 
     private boolean isMatch(String[] record)

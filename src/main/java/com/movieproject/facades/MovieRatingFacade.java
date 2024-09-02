@@ -2,6 +2,7 @@ package com.movieproject.facades;
 
 import com.movieproject.contexts.FileHandler;
 import com.movieproject.contexts.ReportHandler;
+import com.movieproject.decorations.TableDecorator;
 import com.movieproject.managers.CrudManager;
 import com.movieproject.managers.UserInteractionManager;
 import com.movieproject.operations.*;
@@ -18,9 +19,12 @@ public class MovieRatingFacade {
     private CrudManager crudManager;
     private UserInteractionManager userInteractionManager;
     private ReportHandler reportHandler;
+    private TableDecorator tableDecorator;
+
 
     private MovieRatingFacade(FileHandler fileHandler, Scanner scanner)
     {
+        this.tableDecorator = TableDecorator.getInstance();
         this.crudManager = new CrudManager(fileHandler);
         this.reportHandler = new ReportHandler(fileHandler);
         this.userInteractionManager = new UserInteractionManager(scanner);
@@ -82,7 +86,10 @@ public class MovieRatingFacade {
      */
     public void countMovieRatingRecordsByUser()
     {
-        reportHandler.execute(new CountMovieRatingRecordsOperation(this.userInteractionManager.getUserId()));
+        reportHandler.execute(new CountMovieRatingRecordsOperation(
+                this.userInteractionManager.getUserId(),
+                tableDecorator
+        ));
     }
 
     /**
@@ -90,7 +97,7 @@ public class MovieRatingFacade {
      */
     public void countMovieRatingRecordsByAllUsers()
     {
-        reportHandler.execute(new CountMovieRatingRecordsOperation());
+        reportHandler.execute(new CountMovieRatingRecordsOperation(tableDecorator));
     }
 
     /**
@@ -98,7 +105,7 @@ public class MovieRatingFacade {
      */
     public void listMoviesByGenres()
     {
-        reportHandler.execute(new ListMoviesByGenreOperation());
+        reportHandler.execute(new ListMoviesByGenreOperation(tableDecorator));
     }
 
     /**
@@ -107,7 +114,7 @@ public class MovieRatingFacade {
      */
     public void listMoviesRatingRecordsByUser()
     {
-        reportHandler.execute(new ListMovieRatingRecordsByUser(this.userInteractionManager.getUserId()));
+        reportHandler.execute(new ListMovieRatingRecordsByUser(this.userInteractionManager.getUserId(), tableDecorator));
     }
 
     /**
@@ -116,7 +123,7 @@ public class MovieRatingFacade {
      */
     public void searchRecordsByUserId()
     {
-        reportHandler.execute(new SearchRecordsOperation(this.userInteractionManager.getUserId()));
+        reportHandler.execute(new SearchRecordsOperation(this.userInteractionManager.getUserId(), tableDecorator));
     }
 
     /**
@@ -126,7 +133,6 @@ public class MovieRatingFacade {
      */
     public void searchRecordsByMovieName()
     {
-        boolean isFound = reportHandler.execute(new SearchRecordsOperation(this.userInteractionManager.getMovieName()));
-        if (!isFound) System.out.println("No records found");
+        reportHandler.execute(new SearchRecordsOperation(this.userInteractionManager.getMovieName(), tableDecorator));
     }
 }

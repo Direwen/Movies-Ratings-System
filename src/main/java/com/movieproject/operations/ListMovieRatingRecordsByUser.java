@@ -1,6 +1,7 @@
 package com.movieproject.operations;
 
 import com.movieproject.contexts.FileHandler;
+import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
 import com.movieproject.models.MovieRatingRecord;
@@ -9,12 +10,14 @@ import java.util.*;
 
 public class ListMovieRatingRecordsByUser implements ReportStrategy, ReportPrinter<ArrayList<MovieRatingRecord>> {
 
+    private final TableDecorator tableDecorator;
     private ArrayList<MovieRatingRecord> list = new ArrayList<>();
     private int userId;
 
-    public ListMovieRatingRecordsByUser(int userId)
+    public ListMovieRatingRecordsByUser(int userId, TableDecorator tableDecorator)
     {
         this.userId = userId;
+        this.tableDecorator = tableDecorator;
     }
 
     @Override
@@ -41,14 +44,18 @@ public class ListMovieRatingRecordsByUser implements ReportStrategy, ReportPrint
     @Override
     public void printReportResult(ArrayList<MovieRatingRecord> list)
     {
+        var table = tableDecorator.createTable();
         System.out.println("Movie Rating Records for User ID " + userId + ":");
         for (MovieRatingRecord record : list) {
-            System.out.println("Movie ID: " + record.recordId +
-                    ", User ID: " + record.userId +
-                    ", Movie Name: " + record.movieName +
-                    ", Rating: " + record.rating +
-                    ", Genres: " + String.join(", ", record.genres));
+            tableDecorator.add(table,
+                    "Record " + record.recordId,
+                            "User ID " + record.userId,
+                            record.movieName,
+                            record.rating + " ratings",
+                            String.join(", ", record.genres)
+                    );
         }
+        tableDecorator.render(table);
     }
 
 }
