@@ -4,39 +4,49 @@ import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
+import de.vandermeer.asciitable.AsciiTable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ListMoviesByGenreOperation implements ReportStrategy, ReportPrinter<HashMap<String, ArrayList<String>>> {
+public class ListMoviesByGenreOperation implements ReportStrategy, ReportPrinter<AsciiTable> {
 
     private final TableDecorator tableDecorator;
-    private HashMap<String, ArrayList<String>> genresHashMap = new HashMap<>();
+    private HashMap<String, HashSet<String>> genresHashMap = new HashMap<>();
+    private final String genre;
 
-    public ListMoviesByGenreOperation(TableDecorator tableDecorator)
+    public ListMoviesByGenreOperation(String genre, TableDecorator tableDecorator)
     {
+        this.genre = genre;
         this.tableDecorator = tableDecorator;
     }
 
     @Override
     public boolean generateReport(FileOperationHandler fileOperationHandler)
     {
+        var table = tableDecorator.createTable();
+        AtomicBoolean isFound = new AtomicBoolean(false);
         boolean success = fileOperationHandler.performOperation(new FileReadOperation( (record) -> {
-            String[] genres = record[4].split("\\|");
-            for (String genre : genres) genresHashMap.computeIfAbsent(genre, k -> new ArrayList<>()).add(record[2]);
+            for (String genre : record[4].split("\\|"))
+                if (genre.equalsIgnoreCase(this.genre)) {
+                    isFound.set(true);
+                    if (genresHashMap.computeIfAbsent(this.genre, key -> new HashSet<>()).add(record[2])) tableDecorator.add(table, genre, record[2]);
+                }
+
         }));
 
-        if (success) printReportResult(genresHashMap);
+        if (success) {
+            if (!isFound.get()) tableDecorator.add(table, "No Movie Found");
+            this.printReportResult(table);
+        }
+
         return success;
     }
 
     @Override
-    public void printReportResult(HashMap<String, ArrayList<String>> genresHashMap)
+    public void printReportResult(AsciiTable table)
     {
-        var table = tableDecorator.createTable();
-        genresHashMap.forEach((genre, movies) -> {
-            movies.forEach(movie -> tableDecorator.add(table, genre, movie));
-        });
         tableDecorator.render(table);
     }
 }

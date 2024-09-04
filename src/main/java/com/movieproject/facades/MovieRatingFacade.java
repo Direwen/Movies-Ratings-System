@@ -105,7 +105,7 @@ public class MovieRatingFacade {
      */
     public void listMoviesByGenres()
     {
-        reportHandler.execute(new ListMoviesByGenreOperation(tableDecorator));
+        reportHandler.execute(new ListMoviesByGenreOperation(this.userInteractionManager.getGenre(), tableDecorator));
     }
 
     /**

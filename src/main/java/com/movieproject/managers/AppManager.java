@@ -56,7 +56,7 @@ public class AppManager {
             System.out.println("6. Search for a movie record by Movie Name");
             System.out.println("7. Count the number of ratings by a specific user");
             System.out.println("8. Show All Sorted Movie Rating Records of a Specific User");
-            System.out.println("9. List all movies grouped by their genre");
+            System.out.println("9. Show All Movies by a Genre");
             System.out.println("10. List the total number of movies rated by each user sorted by movie counts");
             System.out.println("11. Exit");
             System.out.println("==================================================");

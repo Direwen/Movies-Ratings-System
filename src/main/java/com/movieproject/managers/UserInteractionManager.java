@@ -87,6 +87,15 @@ public class UserInteractionManager {
     }
 
     /**
+     *
+     * @return the entered genre type
+     */
+    public String getGenre()
+    {
+        return this.readString("Enter a Genre type");
+    }
+
+    /**
      * Reads an integer from the user with validation.
      *
      * @param promptMsg the message to prompt the user.
