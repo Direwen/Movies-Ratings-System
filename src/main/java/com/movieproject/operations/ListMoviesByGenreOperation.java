@@ -1,6 +1,6 @@
 package com.movieproject.operations;
 
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
@@ -19,9 +19,9 @@ public class ListMoviesByGenreOperation implements ReportStrategy, ReportPrinter
     }
 
     @Override
-    public boolean generateReport(FileHandler fileHandler)
+    public boolean generateReport(FileOperationHandler fileOperationHandler)
     {
-        boolean success = fileHandler.performOperation(new FileReadOperation( (record) -> {
+        boolean success = fileOperationHandler.performOperation(new FileReadOperation( (record) -> {
             String[] genres = record[4].split("\\|");
             for (String genre : genres) genresHashMap.computeIfAbsent(genre, k -> new ArrayList<>()).add(record[2]);
         }));

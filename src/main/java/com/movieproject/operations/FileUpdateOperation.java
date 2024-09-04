@@ -14,11 +14,22 @@ public class FileUpdateOperation implements FileOperation {
     private RecordUpdater updater;
     private String tempFilePath;
 
+    /**
+     * Constructor
+     * @param tempFilePath
+     * @param updater
+     */
     public FileUpdateOperation(String tempFilePath, RecordUpdater updater) {
         this.tempFilePath = tempFilePath;
         this.updater = updater;
     }
 
+    /**
+     * A function to be exceuted by FileHandler
+     * @param file
+     * @return boolean
+     * @throws IOException
+     */
     @Override
     public boolean execute(File file) throws IOException
     {

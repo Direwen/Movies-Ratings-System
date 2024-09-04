@@ -1,9 +1,7 @@
 package com.movieproject.models;
 
 
-import java.util.Comparator;
-
-public class MovieRatingRecord implements Comparator<MovieRatingRecord> {
+public class MovieRatingRecord {
     public int recordId;
     public int userId;
     public String movieName;
@@ -20,11 +18,6 @@ public class MovieRatingRecord implements Comparator<MovieRatingRecord> {
 
     private String[] sanitize(String text) {
         return text.split("\\|");
-    }
-
-    public String toString() {
-        int var10000 = this.recordId;
-        return "com.movieproject.models.MovieRatingRecord{recordId=" + var10000 + ", userId=" + this.userId + ", movieName='" + this.movieName + "', rating=" + this.rating + ", genres=" + String.valueOf(this.genres) + "}";
     }
 
     public static MovieRatingRecord convertToObj(String[] record)
@@ -46,12 +39,6 @@ public class MovieRatingRecord implements Comparator<MovieRatingRecord> {
                 Float.toString(record.rating),
                 String.join("|", record.genres)
         };
-    }
-
-    @Override
-    public int compare(MovieRatingRecord o1, MovieRatingRecord o2)
-    {
-        return Float.compare(o1.rating, o2.rating);
     }
 
 }

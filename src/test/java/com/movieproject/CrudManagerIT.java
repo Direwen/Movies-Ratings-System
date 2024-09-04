@@ -1,6 +1,6 @@
 package com.movieproject;
 
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.interfaces.Validator;
 import com.movieproject.managers.CrudManager;
 import com.movieproject.models.MovieRatingRecord;
@@ -17,8 +17,8 @@ class CrudManagerIT {
     @BeforeAll
     static void init() {
         Validator<MovieRatingRecord> recordValidator = new RecordValidator();
-        FileHandler fileHandler = new FileHandler("./data/Test_Movie_Dataset.csv", recordValidator);
-        crudManager = new CrudManager(fileHandler);
+        FileOperationHandler fileOperationHandler = new FileOperationHandler("./data/Test_Movie_Dataset.csv", recordValidator);
+        crudManager = new CrudManager(fileOperationHandler);
     }
 
     @Test

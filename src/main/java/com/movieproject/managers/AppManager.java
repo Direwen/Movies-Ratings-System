@@ -1,6 +1,6 @@
 package com.movieproject.managers;
 
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.facades.MovieRatingFacade;
 import java.util.Scanner;
 
@@ -14,23 +14,23 @@ public class AppManager {
     private MovieRatingFacade service;
     private Scanner scanner;
 
-    private AppManager(FileHandler fileHandler)
+    private AppManager(FileOperationHandler fileOperationHandler)
     {
         this.scanner = new Scanner(System.in);
-        this.service = MovieRatingFacade.getInstance(fileHandler, this.scanner);
+        this.service = MovieRatingFacade.getInstance(fileOperationHandler, this.scanner);
     }
 
     /**
      * Returns the singleton instance of the AppManager.
      * If no instance exists, it creates one using the provided FileHandler.
      *
-     * @param fileHandler the FileHandler used to manage file operations.
+     * @param fileOperationHandler the FileHandler used to manage file operations.
      * @return the singleton instance of AppManager.
      */
-    public static AppManager getInstance(FileHandler fileHandler)
+    public static AppManager getInstance(FileOperationHandler fileOperationHandler)
     {
         if (instance == null)
-            instance = new AppManager(fileHandler);
+            instance = new AppManager(fileOperationHandler);
         return instance;
     }
 
@@ -62,17 +62,12 @@ public class AppManager {
             System.out.println("==================================================");
             System.out.print("Enter your choice (1-11): ");
             userInput = this.scanner.nextLine();
-            if (userInput.matches("[1-9]|10|11")) {
-                validOption = true;
-            } else {
-                System.out.println("Invalid input. Please enter a number between 1 and 11.");
-            }
+            if (userInput.matches("[1-9]|10|11")) validOption = true;
+            else System.out.println("Invalid input. Please enter a number between 1 and 11.");
         }
-
         // Clear the console for a fresh look (for IDE consoles that support it)
         System.out.print("\033[H\033[2J");
         System.out.flush();
-
         return userInput;
     }
 

@@ -1,6 +1,6 @@
 package com.movieproject.operations;
 
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
@@ -24,11 +24,11 @@ public class SearchRecordsOperation implements ReportStrategy, ReportPrinter<Asc
     }
 
     @Override
-    public boolean generateReport(FileHandler fileHandler)
+    public boolean generateReport(FileOperationHandler fileOperationHandler)
     {
         final boolean[] isMatchFound = {false};  // Use an array to hold the flag, as lambdas require variables to be final or effectively final
         var table = tableDecorator.createTable();
-        boolean success = fileHandler.performOperation(new FileReadOperation( (record) -> {
+        boolean success = fileOperationHandler.performOperation(new FileReadOperation( (record) -> {
             try {
                 if (isMatch(record)) {
                     tableDecorator.add(
@@ -48,9 +48,7 @@ public class SearchRecordsOperation implements ReportStrategy, ReportPrinter<Asc
 
         if (!isMatchFound[0]) tableDecorator.add(table, "No Record Found");
         printReportResult(table);
-
         return success && isMatchFound[0];  // Return true if operation was successful and a match was found
-
     }
 
     @Override

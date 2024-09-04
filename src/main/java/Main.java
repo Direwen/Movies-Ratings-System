@@ -1,4 +1,4 @@
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.interfaces.Validator;
 import com.movieproject.managers.AppManager;
 import com.movieproject.models.MovieRatingRecord;
@@ -10,9 +10,9 @@ public class Main {
 
     public static void main(String[] args) {
         Validator<MovieRatingRecord> recordValidator = new RecordValidator();
-//        FileHandler fileHandler = new FileHandler("./data/movies_dataset.csv", recordValidator);
-        FileHandler fileHandler = new FileHandler("./data/Sample_Movie_Dataset.csv", recordValidator);
-        AppManager appManager = AppManager.getInstance(fileHandler);
+        FileOperationHandler fileOperationHandler = new FileOperationHandler("./data/movies_dataset.csv", recordValidator);
+//        FileOperationHandler fileOperationHandler = new FileOperationHandler("./data/Sample_Movie_Dataset.csv", recordValidator);
+        AppManager appManager = AppManager.getInstance(fileOperationHandler);
         appManager.run();
     }
 }

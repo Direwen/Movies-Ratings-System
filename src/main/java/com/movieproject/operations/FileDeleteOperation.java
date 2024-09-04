@@ -12,15 +12,25 @@ public class FileDeleteOperation implements FileOperation {
     private int recordId;
     private String tempFilePath;
 
+    /**
+     * Constructor
+     * @param recordId
+     * @param tempFilePath
+     */
     public FileDeleteOperation(int recordId, String tempFilePath) {
         this.recordId = recordId;
         this.tempFilePath = tempFilePath;
     }
 
+    /**
+     * A function to be exceuted by FileHandler
+     * @param file
+     * @return boolean
+     * @throws IOException
+     */
     @Override
     public boolean execute(File file) throws IOException {
         File tempFile = new File(this.tempFilePath);
-
         try (
                 CSVReader reader = new CSVReader(new FileReader(file));
                 CSVWriter writer = new CSVWriter(new FileWriter(tempFile))
@@ -32,20 +42,14 @@ public class FileDeleteOperation implements FileOperation {
             boolean isDeleted = false;
             while ((nextLine = reader.readNext()) != null)
             {
-                if (!nextLine[0].equals(Integer.toString(this.recordId))) {
-                    writer.writeNext(nextLine);
-                } else {
-                    isDeleted = true;
-                }
+                if (!nextLine[0].equals(Integer.toString(this.recordId))) writer.writeNext(nextLine);
+                else isDeleted = true;
             }
 
             //Checking if the file was actually deleted
-            if (isDeleted) {
-                return true;
-            } else {
-                System.out.println("A record with " + this.recordId + " ID wasn't found");
-                return false;
-            }
+            if (isDeleted) return true;
+            System.out.println("A record with " + this.recordId + " ID wasn't found");
+            return false;
 
         } catch (Exception err) {
             System.out.println("Error occured during the process of reading records : " + err.getMessage());

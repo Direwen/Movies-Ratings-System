@@ -9,11 +9,11 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * The FileHandler class is responsible for handling file operations such as reading, writing,
+ * Responsible for handling file operations such as reading, writing,
  * updating, and deleting records in a CSV file. It also manages a temporary file during
  * operations that require replacing the original file.
  */
-public class FileHandler {
+public class FileOperationHandler {
     private String filePath;
     private String tempFilePath;
     private Validator validator;
@@ -23,7 +23,7 @@ public class FileHandler {
      *
      * @param filePath The path of the main file to operate on.
      */
-    public FileHandler(String filePath, Validator validator) {
+    public FileOperationHandler(String filePath, Validator validator) {
         this.filePath = filePath;
         this.tempFilePath = "./data/temp_data.csv";
         this.validator = validator;
@@ -44,11 +44,8 @@ public class FileHandler {
 
         try {
             boolean success = operation.execute(mainFile);
-            if (success && (operation instanceof FileUpdateOperation || operation instanceof FileDeleteOperation)) {
-                return replaceMainFile();
-            }
-
-            deleteTempFile(); // Ensure temp file is deleted on error
+            if (success && (operation instanceof FileUpdateOperation || operation instanceof FileDeleteOperation)) return replaceMainFile();
+            deleteTempFile();
             return success;
 
         } catch (IOException e) {
@@ -56,7 +53,6 @@ public class FileHandler {
             deleteTempFile(); // Ensure temp file is deleted on error
             return false;
         }
-
     }
 
     /**

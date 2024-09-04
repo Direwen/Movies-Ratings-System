@@ -1,6 +1,6 @@
 package com.movieproject.operations;
 
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
@@ -8,22 +8,22 @@ import com.movieproject.models.MovieRatingRecord;
 
 import java.util.*;
 
-public class ListMovieRatingRecordsByUser implements ReportStrategy, ReportPrinter<ArrayList<MovieRatingRecord>> {
+public class ListMovieRatingRecordsByUserOperation implements ReportStrategy, ReportPrinter<ArrayList<MovieRatingRecord>> {
 
     private final TableDecorator tableDecorator;
     private ArrayList<MovieRatingRecord> list = new ArrayList<>();
     private int userId;
 
-    public ListMovieRatingRecordsByUser(int userId, TableDecorator tableDecorator)
+    public ListMovieRatingRecordsByUserOperation(int userId, TableDecorator tableDecorator)
     {
         this.userId = userId;
         this.tableDecorator = tableDecorator;
     }
 
     @Override
-    public boolean generateReport(FileHandler fileHandler)
+    public boolean generateReport(FileOperationHandler fileOperationHandler)
     {
-        boolean success = fileHandler.performOperation(new FileReadOperation( (record) -> {
+        boolean success = fileOperationHandler.performOperation(new FileReadOperation( (record) -> {
             if (record[1].equals(Integer.toString(userId)))
                 list.add(new MovieRatingRecord(
                         Integer.parseInt(record[0]),
@@ -33,7 +33,6 @@ public class ListMovieRatingRecordsByUser implements ReportStrategy, ReportPrint
                         record[4]
                 ));
         }));
-
         if (success) {
             Collections.sort(list, (a, b) -> Float.compare(b.rating, a.rating));
             printReportResult(list);
@@ -45,7 +44,6 @@ public class ListMovieRatingRecordsByUser implements ReportStrategy, ReportPrint
     public void printReportResult(ArrayList<MovieRatingRecord> list)
     {
         var table = tableDecorator.createTable();
-        System.out.println("Movie Rating Records for User ID " + userId + ":");
         for (MovieRatingRecord record : list) {
             tableDecorator.add(table,
                     "Record " + record.recordId,

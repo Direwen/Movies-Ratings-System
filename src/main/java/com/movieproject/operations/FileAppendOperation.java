@@ -9,11 +9,21 @@ import java.io.IOException;
 public class FileAppendOperation implements FileOperation {
     private String[] data;
 
+    /***
+     * Constructor of File Append Operation
+     * @param data
+     */
     public FileAppendOperation(String[] data)
     {
         this.data = data;
     }
 
+    /***
+     * A function to be exceuted by FileHandler
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @Override
     public boolean execute(File file) throws IOException
     {
@@ -25,6 +35,4 @@ public class FileAppendOperation implements FileOperation {
             return false;
         }
     }
-
-
 }

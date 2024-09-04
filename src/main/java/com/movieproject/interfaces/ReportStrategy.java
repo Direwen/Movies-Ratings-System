@@ -1,7 +1,7 @@
 package com.movieproject.interfaces;
 
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 
 public interface ReportStrategy {
-    boolean generateReport(FileHandler fileHandler);
+    boolean generateReport(FileOperationHandler fileOperationHandler);
 }

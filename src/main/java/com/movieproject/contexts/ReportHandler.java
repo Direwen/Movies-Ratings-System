@@ -4,15 +4,15 @@ import com.movieproject.interfaces.ReportStrategy;
 
 public class ReportHandler {
 
-    private FileHandler fileHandler;
+    private FileOperationHandler fileOperationHandler;
 
-    public ReportHandler(FileHandler fileHandler)
+    public ReportHandler(FileOperationHandler fileOperationHandler)
     {
-        this.fileHandler = fileHandler;
+        this.fileOperationHandler = fileOperationHandler;
     }
 
     public boolean execute(ReportStrategy strategy)
     {
-        return strategy.generateReport(this.fileHandler);
+        return strategy.generateReport(this.fileOperationHandler);
     }
 }

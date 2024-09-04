@@ -1,6 +1,6 @@
 package com.movieproject.facades;
 
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.contexts.ReportHandler;
 import com.movieproject.decorations.TableDecorator;
 import com.movieproject.managers.CrudManager;
@@ -22,11 +22,11 @@ public class MovieRatingFacade {
     private TableDecorator tableDecorator;
 
 
-    private MovieRatingFacade(FileHandler fileHandler, Scanner scanner)
+    private MovieRatingFacade(FileOperationHandler fileOperationHandler, Scanner scanner)
     {
         this.tableDecorator = TableDecorator.getInstance();
-        this.crudManager = new CrudManager(fileHandler);
-        this.reportHandler = new ReportHandler(fileHandler);
+        this.crudManager = new CrudManager(fileOperationHandler);
+        this.reportHandler = new ReportHandler(fileOperationHandler);
         this.userInteractionManager = new UserInteractionManager(scanner);
     }
 
@@ -34,14 +34,14 @@ public class MovieRatingFacade {
      * Returns the singleton instance of the MovieRatingFacade.
      * If no instance exists, it creates one using the provided FileHandler and Scanner.
      *
-     * @param fileHandler the FileHandler used to manage file operations.
+     * @param fileOperationHandler the FileHandler used to manage file operations.
      * @param scanner the Scanner used for user input.
      * @return the singleton instance of MovieRatingFacade.
      */
-    public static MovieRatingFacade getInstance(FileHandler fileHandler, Scanner scanner)
+    public static MovieRatingFacade getInstance(FileOperationHandler fileOperationHandler, Scanner scanner)
     {
         if (instance == null)
-            instance = new MovieRatingFacade(fileHandler, scanner);
+            instance = new MovieRatingFacade(fileOperationHandler, scanner);
         return instance;
     }
 
@@ -114,7 +114,7 @@ public class MovieRatingFacade {
      */
     public void listMoviesRatingRecordsByUser()
     {
-        reportHandler.execute(new ListMovieRatingRecordsByUser(this.userInteractionManager.getUserId(), tableDecorator));
+        reportHandler.execute(new ListMovieRatingRecordsByUserOperation(this.userInteractionManager.getUserId(), tableDecorator));
     }
 
     /**

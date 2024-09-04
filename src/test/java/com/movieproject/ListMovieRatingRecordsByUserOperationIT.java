@@ -5,12 +5,12 @@ import com.movieproject.contexts.ReportHandler;
 import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.Validator;
 import com.movieproject.models.MovieRatingRecord;
-import com.movieproject.operations.SearchRecordsOperation;
+import com.movieproject.operations.ListMovieRatingRecordsByUserOperation;
 import com.movieproject.validators.RecordValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class SearchRecordsOperationIT {
+class ListMovieRatingRecordsByUserOperationIT {
 
     private static ReportHandler reportHandler;
     private static TableDecorator tableDecorator;
@@ -25,14 +25,8 @@ class SearchRecordsOperationIT {
     }
 
     @Test
-    void searchRecordsByUserId()
+    void generateReport()
     {
-        reportHandler.execute(new SearchRecordsOperation(2, tableDecorator));
-    }
-
-    @Test
-    void searchRecordsByMovieName()
-    {
-        reportHandler.execute(new SearchRecordsOperation("unknown", tableDecorator));
+        reportHandler.execute(new ListMovieRatingRecordsByUserOperation(2, tableDecorator));
     }
 }

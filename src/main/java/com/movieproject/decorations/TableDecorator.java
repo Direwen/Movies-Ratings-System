@@ -31,5 +31,4 @@ public class TableDecorator {
         System.out.println(table.render());
     }
 
-
 }

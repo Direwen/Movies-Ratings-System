@@ -11,10 +11,20 @@ import java.io.IOException;
 public class FileReadOperation implements FileOperation {
     private RecordProcessor processor;
 
+    /**
+     * Constructor
+     * @param processor
+     */
     public FileReadOperation(RecordProcessor processor) {
         this.processor = processor;
     }
 
+    /**
+     * A function to be exceuted by FileHandler
+     * @param file
+     * @return boolean
+     * @throws IOException
+     */
     @Override
     public boolean execute(File file) throws IOException {
         try (CSVReader reader = new CSVReader(new FileReader(file))) {

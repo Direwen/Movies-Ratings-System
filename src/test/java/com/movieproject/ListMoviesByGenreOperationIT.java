@@ -1,7 +1,8 @@
 package com.movieproject;
 
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.contexts.ReportHandler;
+import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.Validator;
 import com.movieproject.models.MovieRatingRecord;
 import com.movieproject.operations.ListMoviesByGenreOperation;
@@ -12,19 +13,21 @@ import org.junit.jupiter.api.Test;
 class ListMoviesByGenreOperationIT {
 
     private static ReportHandler reportHandler;
+    private static TableDecorator tableDecorator;
 
     @BeforeAll
     static void init()
     {
         Validator<MovieRatingRecord> recordValidator = new RecordValidator();
-        FileHandler fileHandler = new FileHandler("./data/Sample_Movie_Dataset.csv", recordValidator);
-        reportHandler = new ReportHandler(fileHandler);
+        tableDecorator = TableDecorator.getInstance();
+        FileOperationHandler fileOperationHandler = new FileOperationHandler("./data/Sample_Movie_Dataset.csv", recordValidator);
+        reportHandler = new ReportHandler(fileOperationHandler);
     }
 
     @Test
     void searchRecordsByUserId()
     {
-        reportHandler.execute(new ListMoviesByGenreOperation());
+        reportHandler.execute(new ListMoviesByGenreOperation(tableDecorator));
     }
 
 }

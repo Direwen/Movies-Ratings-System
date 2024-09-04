@@ -7,7 +7,7 @@ import com.movieproject.interfaces.Updateable;
 import com.movieproject.models.MovieRatingRecord;
 import com.movieproject.operations.FileAppendOperation;
 import com.movieproject.operations.FileDeleteOperation;
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.operations.FileReadOperation;
 import com.movieproject.operations.FileUpdateOperation;
 import java.util.ArrayList;
@@ -20,16 +20,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * It uses a FileHandler to perform file-based operations.
  */
 public class CrudManager implements Createable<String[]>, Readable, Updateable<String[]>, Deleteable {
-    private FileHandler fileHandler;
+    private FileOperationHandler fileOperationHandler;
 
     /**
      * Constructor for CrudManager.
      *
-     * @param fileHandler the FileHandler used to manage file operations.
+     * @param fileOperationHandler the FileHandler used to manage file operations.
      */
-    public CrudManager(FileHandler fileHandler)
+    public CrudManager(FileOperationHandler fileOperationHandler)
     {
-        this.fileHandler = fileHandler;
+        this.fileOperationHandler = fileOperationHandler;
     }
 
     /**
@@ -44,8 +44,8 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
         ArrayList<MovieRatingRecord> list = new ArrayList<>();
         AtomicBoolean isRecordIdUnique = new AtomicBoolean(true);
 
-        this.fileHandler.performOperation(new FileReadOperation((record) -> {
-            if (!this.fileHandler.getValidator().isRecordUnique(record, newRecord)) {
+        this.fileOperationHandler.performOperation(new FileReadOperation((record) -> {
+            if (!this.fileOperationHandler.getValidator().isRecordUnique(record, newRecord)) {
                 isRecordIdUnique.set(false);
             } else if (record[1].equals(newRecord[1])) {
                 list.add(MovieRatingRecord.convertToObj(record));
@@ -53,8 +53,8 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
         }));
 
         if (isRecordIdUnique.get()) {
-            if (this.fileHandler.getValidator().isUserRatingAllowed(list, newRecord)) {
-                boolean result = this.fileHandler.performOperation(new FileAppendOperation(newRecord));
+            if (this.fileOperationHandler.getValidator().isUserRatingAllowed(list, newRecord)) {
+                boolean result = this.fileOperationHandler.performOperation(new FileAppendOperation(newRecord));
                 if (result) {
                     System.out.println("Record successfully created.");
                     return true;
@@ -72,8 +72,8 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
     public boolean read()
     {
         AtomicBoolean isReadSuccessful = new AtomicBoolean(false);
-        boolean success = this.fileHandler.performOperation(new FileReadOperation((record) -> {
-            System.out.println(Arrays.toString(record));
+        boolean success = this.fileOperationHandler.performOperation(new FileReadOperation((record) -> {
+            System.out.println(String.join(" , ", record));
             isReadSuccessful.set(true);
         }));
         if (success) {
@@ -81,7 +81,6 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
             else System.out.println("No records found.");
             return true;
         } else return false;
-
     }
 
     /**
@@ -93,7 +92,7 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
     @Override
     public boolean update(String[] recordToUpdate)
     {
-        boolean result = this.fileHandler.performOperation(new FileUpdateOperation(this.fileHandler.getTempFilePath(), (record) -> {
+        boolean result = this.fileOperationHandler.performOperation(new FileUpdateOperation(this.fileOperationHandler.getTempFilePath(), (record) -> {
             if (record[0].equals(recordToUpdate[0]) && record[3].equals(recordToUpdate[3]) && record[4].equals(recordToUpdate[4])) {
                 System.out.println("Update ignored - No changes detected or attempting to rate the same movie twice.");
             } else if (record[0].equals(recordToUpdate[0])) {
@@ -119,7 +118,7 @@ public class CrudManager implements Createable<String[]>, Readable, Updateable<S
     @Override
     public boolean delete(int recordId)
     {
-        boolean result = this.fileHandler.performOperation(new FileDeleteOperation(recordId, this.fileHandler.getTempFilePath()));
+        boolean result = this.fileOperationHandler.performOperation(new FileDeleteOperation(recordId, this.fileOperationHandler.getTempFilePath()));
         if (result) {
             System.out.println("Record successfully deleted.");
             return true;

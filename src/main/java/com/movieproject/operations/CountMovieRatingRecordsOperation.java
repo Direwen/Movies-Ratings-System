@@ -1,6 +1,6 @@
 package com.movieproject.operations;
 
-import com.movieproject.contexts.FileHandler;
+import com.movieproject.contexts.FileOperationHandler;
 import com.movieproject.decorations.TableDecorator;
 import com.movieproject.interfaces.ReportPrinter;
 import com.movieproject.interfaces.ReportStrategy;
@@ -14,6 +14,10 @@ public class CountMovieRatingRecordsOperation implements ReportStrategy, ReportP
     private final boolean isForAllUsers;
     private final HashMap<String, Integer> countsHashMap = new HashMap<>();
 
+    /**
+     * Constructor for counting operation of records of one user
+     * @param tableDecorator
+     */
     public CountMovieRatingRecordsOperation(TableDecorator tableDecorator)
     {
         this.userId = null;
@@ -21,6 +25,11 @@ public class CountMovieRatingRecordsOperation implements ReportStrategy, ReportP
         this.tableDecorator = tableDecorator;
     }
 
+    /**
+     * Constructor for counting operation of records of all users
+     * @param userId
+     * @param tableDecorator
+     */
     public CountMovieRatingRecordsOperation(int userId, TableDecorator tableDecorator)
     {
         this.userId = userId;
@@ -29,9 +38,9 @@ public class CountMovieRatingRecordsOperation implements ReportStrategy, ReportP
     }
 
     @Override
-    public boolean generateReport(FileHandler fileHandler)
+    public boolean generateReport(FileOperationHandler fileOperationHandler)
     {
-        boolean success = fileHandler.performOperation(new FileReadOperation((record) -> {
+        boolean success = fileOperationHandler.performOperation(new FileReadOperation((record) -> {
             if (isForAllUsers) countsHashMap.put(record[1], countsHashMap.getOrDefault(record[1], 0) + 1);
             else if (record[1].equals(userId.toString())) countsHashMap.put(record[1], countsHashMap.getOrDefault(record[1], 0) + 1);
         }));
@@ -48,7 +57,6 @@ public class CountMovieRatingRecordsOperation implements ReportStrategy, ReportP
               List<Map.Entry<String, Integer>> list = new ArrayList<>(countsHashMap.entrySet());
               Collections.sort(list, (e1, e2) -> e2.getValue().compareTo(e1.getValue()));
               list.forEach(entry -> tableDecorator.add(table, "User ID: " + entry.getKey(), "Rating Count: " + entry.getValue()));
-
         }
         else tableDecorator.add(table, "User ID: " + userId, "Rating Count: " + countsHashMap.getOrDefault(userId.toString(), 0));
 

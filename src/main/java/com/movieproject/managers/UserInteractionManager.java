@@ -86,8 +86,6 @@ public class UserInteractionManager {
         return this.readString("Enter The Movie Name");
     }
 
-    // Private helper methods for reading and validating inputs
-
     /**
      * Reads an integer from the user with validation.
      *
@@ -122,10 +120,7 @@ public class UserInteractionManager {
             try {
                 System.out.print(promptMsg + " >>> ");
                 float value = parseFloat(this.scanner.nextLine());
-                if (value >= min && value <= max) {
-                    return value;
-                }
-
+                if (value >= min && value <= max) return value;
                 throw new Exception();
             } catch (Exception err) {
                 System.out.println("Invalid input. Please Enter a valid number between " + min + " and " + max);
@@ -145,10 +140,7 @@ public class UserInteractionManager {
             try {
                 System.out.print(promptMsg + " >>> ");
                 String value = this.scanner.nextLine().trim();
-                if (value.isEmpty()) {
-                    throw new Exception();
-                }
-
+                if (value.isEmpty()) throw new Exception();
                 return value;
             } catch (Exception err) {
                 System.out.println("Invalid input. Please enter a valid text.");
@@ -167,10 +159,7 @@ public class UserInteractionManager {
         while(true) {
             try {
                 String value = this.readString(promptMsg);
-                if (!this.isGenresInputValid(value)) {
-                    throw new Exception();
-                }
-
+                if (!this.isGenresInputValid(value)) throw new Exception();
                 return this.formatGenres(value);
             } catch (Exception err) {
                 System.out.println("Invalid Format. Please enter Genres like this example: Comedy|Horror|Action");
@@ -178,6 +167,12 @@ public class UserInteractionManager {
         }
     }
 
+    /**
+     * Convert String to Integer
+     *
+     * @param input
+     * @return
+     */
     protected int parseInteger(String input)
     {
         try {
@@ -187,6 +182,11 @@ public class UserInteractionManager {
         }
     }
 
+    /**
+     * Convert String to Float
+     * @param input
+     * @return
+     */
     protected float parseFloat(String input)
     {
         try {
@@ -216,11 +216,7 @@ public class UserInteractionManager {
     protected String formatGenres(String input)
     {
         String[] genresArray = input.split("\\|");
-
-        for(int i = 0; i < genresArray.length; ++i) {
-            genresArray[i] = this.capitalizeFirstLetter(genresArray[i].trim());
-        }
-
+        for(int i = 0; i < genresArray.length; ++i) genresArray[i] = this.capitalizeFirstLetter(genresArray[i].trim());
         return (String)(new HashSet(Arrays.asList(genresArray))).stream().collect(Collectors.joining("|"));
     }
 
@@ -235,8 +231,7 @@ public class UserInteractionManager {
         if (genre != null && !genre.isEmpty()) {
             String var10000 = genre.substring(0, 1).toUpperCase();
             return var10000 + genre.substring(1).toLowerCase();
-        } else {
-            return genre;
         }
+        return genre;
     }
 }
