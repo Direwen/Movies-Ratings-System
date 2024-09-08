@@ -10,6 +10,8 @@ import com.movieproject.validators.RecordValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class CountMovieRatingRecordsOperationIT {
 
     private static ReportHandler reportHandler;
@@ -26,12 +28,12 @@ class CountMovieRatingRecordsOperationIT {
     @Test
     void countMovieRatingRecordsByUserId()
     {
-        reportHandler.execute(new CountMovieRatingRecordsOperation(1, tableDecorator));
+        assertTrue(reportHandler.execute(new CountMovieRatingRecordsOperation(1, tableDecorator)), "Successfully Counted the Records for One User");
     }
 
     @Test
     void countMovieRatingRecordsForAllUsers()
     {
-        reportHandler.execute(new CountMovieRatingRecordsOperation(tableDecorator));
+        assertTrue(reportHandler.execute(new CountMovieRatingRecordsOperation(tableDecorator)), "Successfully Counted the Records for All Users");
     }
 }

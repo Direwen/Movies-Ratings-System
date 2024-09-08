@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Scanner;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,27 +67,40 @@ class UserInteractionManagerTest {
     }
 
     @Test
-    void formatGenres_validInput()
+    void isGenreInputValid_doubleDelimeter()
     {
-        assertEquals("Action|Drama|Comedy", manager.formatGenres("comedy|action|drama"));
+        assertFalse(manager.isGenresInputValid("Comedy|||Action||Drama"));
     }
 
     @Test
-    void formatGenres_duplicatesInput()
+    void isGenresInputValid_multipleDashes()
     {
-        assertEquals("Action|Comedy", manager.formatGenres("comedy|action|Comedy"));
+        assertFalse(manager.isGenresInputValid("Action|Drama|Sci--Fi"));
     }
 
     @Test
-    void formatGenres_mixedCaseInput()
-    {
-        assertEquals("Action|Drama|Comedy", manager.formatGenres("CoMeDy|AcTiOn|dRaMa"));
+    void formatGenres_validInput() {
+        assertTrue(Set.of("Action", "Drama", "Comedy").equals(Set.of(manager.formatGenres("comedy|action|drama").split("\\|"))));
     }
 
     @Test
-    void formatGenres_trailingSpacesInput()
-    {
-        assertEquals("Action|Drama|Comedy", manager.formatGenres("  Comedy  | Action | Drama  "));
+    void formatGenres_duplicatesInput() {
+        assertTrue(Set.of("Action", "Comedy").equals(Set.of(manager.formatGenres("comedy|action|comedy").split("\\|"))));
+    }
+
+    @Test
+    void formatGenres_mixedCaseInput() {
+        assertTrue(Set.of("Action", "Drama", "Comedy").equals(Set.of(manager.formatGenres("CoMeDy|AcTiOn|dRaMa").split("\\|"))));
+    }
+
+    @Test
+    void formatGenres_trailingSpacesInput() {
+        assertTrue(Set.of("Action", "Drama", "Comedy").equals(Set.of(manager.formatGenres("  Comedy  | Action | Drama  ").split("\\|"))));
+    }
+
+    @Test
+    void formatGenres_singleDash() {
+        assertTrue(Set.of("Sci-Fi", "Action", "Drama").equals(Set.of(manager.formatGenres(" sci-fi | action | Drama ").split("\\|"))));
     }
 
 }

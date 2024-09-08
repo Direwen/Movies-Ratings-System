@@ -48,7 +48,7 @@ public class FileOperationHandler {
             deleteTempFile();
             return success;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Error occurred during file operation: " + e.getMessage());
             deleteTempFile(); // Ensure temp file is deleted on error
             return false;

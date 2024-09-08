@@ -10,6 +10,8 @@ import com.movieproject.validators.RecordValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class SearchRecordsOperationIT {
 
     private static ReportHandler reportHandler;
@@ -27,12 +29,12 @@ class SearchRecordsOperationIT {
     @Test
     void searchRecordsByUserId()
     {
-        reportHandler.execute(new SearchRecordsOperation(2, tableDecorator));
+        assertTrue(reportHandler.execute(new SearchRecordsOperation(2, tableDecorator)));
     }
 
     @Test
     void searchRecordsByMovieName()
     {
-        reportHandler.execute(new SearchRecordsOperation("unknown", tableDecorator));
+        assertTrue(reportHandler.execute(new SearchRecordsOperation("unknown", tableDecorator)));
     }
 }

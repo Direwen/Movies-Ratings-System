@@ -35,7 +35,7 @@ public class UserInteractionManager {
                 Integer.toString(this.readInteger("Enter Record ID: ")),
                 Integer.toString(this.readInteger("Enter User ID: ")),
                 this.readString("Enter Movie Name: "),
-                Float.toString(this.readFloat("Enter Rating (0.0 - 5.0): ", 0.0F, 5.0F)),
+                Float.toString(this.readFloat("Enter Rating (0.0 - " + RATING_MAX +"): ", RATING_MIN, RATING_MAX)),
                 this.readGenres("Enter Genres (separated by '|'): ")
         };
     }
@@ -51,7 +51,7 @@ public class UserInteractionManager {
                 Integer.toString(this.readInteger("Enter ID of the record to Update: ")),
                 "",
                 "",
-                Float.toString(this.readFloat("Enter Rating (0.0 - 5.0): ", 0.0F, 5.0F)),
+                Float.toString(this.readFloat("Enter Rating (0.0 - " + RATING_MAX +"): ", RATING_MIN, RATING_MAX)),
                 this.readGenres("Enter Genres (separated by '|'): ")
         };
     }
@@ -171,7 +171,13 @@ public class UserInteractionManager {
                 if (!this.isGenresInputValid(value)) throw new Exception();
                 return this.formatGenres(value);
             } catch (Exception err) {
-                System.out.println("Invalid Format. Please enter Genres like this example: Comedy|Horror|Action");
+                System.out.println("Invalid Format. Please enter genres following these rules:\n" +
+                        "1. Use single words or hyphenated words for genres. E.g., 'Action', 'Sci-Fi'.\n" +
+                        "2. Do not use spaces within a genre. E.g., 'Indie Pop' is invalid; use 'IndiePop' instead.\n" +
+                        "3. Each genre can have only one hyphen. E.g., 'Rock-N-Roll' is valid; 'Rock-N-Roll-N-Roll' is invalid.\n" +
+                        "4. Separate multiple genres with a single pipe symbol '|'. Don't add any extra spaces around genres.\n" +
+                        "5. Ensure no genre starts or ends with a pipe symbol or has multiple consecutive pipes. E.g., 'Action||Comedy' is invalid.\n" +
+                        "Example of valid input: 'Comedy|Horror|Action|Sci-Fi'");
             }
         }
     }
@@ -213,7 +219,7 @@ public class UserInteractionManager {
      */
     protected boolean isGenresInputValid(String input)
     {
-        return input.matches("^[a-zA-Z\\s]+(\\|[a-zA-Z\\s]+)*$");
+        return input.matches("^[a-zA-Z]+(-[a-zA-Z]+)?(\\|[a-zA-Z]+(-[a-zA-Z]+)?)*$");
     }
 
     /**
@@ -225,8 +231,29 @@ public class UserInteractionManager {
     protected String formatGenres(String input)
     {
         String[] genresArray = input.split("\\|");
-        for(int i = 0; i < genresArray.length; ++i) genresArray[i] = this.capitalizeFirstLetter(genresArray[i].trim());
-        return (String)(new HashSet(Arrays.asList(genresArray))).stream().collect(Collectors.joining("|"));
+
+        // Capitalize and format each genre
+        for (int i = 0; i < genresArray.length; ++i) {
+            genresArray[i] = capitalizeGenre(genresArray[i].trim());
+        }
+
+        // Remove duplicates by storing in a HashSet and then join them back with "|"
+        return new HashSet<>(Arrays.asList(genresArray)).stream().collect(Collectors.joining("|"));
+    }
+
+    /**
+     * Capitalizes the first letter of each word in a genre string.
+     * Keeps dashes as separators between words.
+     *
+     * @param genre the genre string to capitalize.
+     * @return the genre string with the first letter of each word capitalized.
+     */
+    private String capitalizeGenre(String genre) {
+        // Split by dash, process each part, and then join back with dash
+        return Arrays.stream(genre.split("-"))
+                .map(part -> part.trim())
+                .map(this::capitalizeFirstLetter)
+                .collect(Collectors.joining("-"));
     }
 
     /**
@@ -238,8 +265,11 @@ public class UserInteractionManager {
     private String capitalizeFirstLetter(String genre)
     {
         if (genre != null && !genre.isEmpty()) {
-            String var10000 = genre.substring(0, 1).toUpperCase();
-            return var10000 + genre.substring(1).toLowerCase();
+            String[] parts = genre.split("-");
+            for (int i = 0; i < parts.length; i++) {
+                parts[i] = parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase();
+            }
+            return String.join("-", parts);
         }
         return genre;
     }

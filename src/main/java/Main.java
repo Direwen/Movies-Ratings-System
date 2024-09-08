@@ -10,8 +10,8 @@ public class Main {
 
     public static void main(String[] args) {
         Validator<MovieRatingRecord> recordValidator = new RecordValidator();
-//        FileOperationHandler fileOperationHandler = new FileOperationHandler("./data/movies_dataset.csv", recordValidator);
-        FileOperationHandler fileOperationHandler = new FileOperationHandler("./data/Sample_Movie_Dataset.csv", recordValidator);
+        FileOperationHandler fileOperationHandler = new FileOperationHandler("./data/movies_dataset.csv", recordValidator);
+//        FileOperationHandler fileOperationHandler = new FileOperationHandler("./data/Sample_Movie_Dataset.csv", recordValidator);
         AppManager appManager = AppManager.getInstance(fileOperationHandler);
         appManager.run();
     }

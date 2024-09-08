@@ -10,6 +10,8 @@ import com.movieproject.validators.RecordValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class ListMovieRatingRecordsByUserOperationIT {
 
     private static ReportHandler reportHandler;
@@ -27,6 +29,6 @@ class ListMovieRatingRecordsByUserOperationIT {
     @Test
     void generateReport()
     {
-        reportHandler.execute(new ListMovieRatingRecordsByUserOperation(2, tableDecorator));
+        assertTrue(reportHandler.execute(new ListMovieRatingRecordsByUserOperation(2, tableDecorator)));
     }
 }

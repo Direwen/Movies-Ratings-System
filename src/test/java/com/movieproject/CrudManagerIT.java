@@ -41,6 +41,30 @@ class CrudManagerIT {
     }
 
     @Test
+    void updateNonExistentRecord() {
+        boolean result = crudManager.update(new String[]{"13", "1", "Nonexistent Movie", "4.0", "Action|Drama"});
+        assertFalse(result, "The update should fail because the record does not exist.");
+    }
+
+    @Test
+    void createRecordWithDuplicateIdOrUserMovie()
+    {
+        crudManager.create(new String[]{"2", "3", "New Movie", "3.2", "Action|Drama"});
+        // Attempt to create another record with the same ID
+        boolean duplicateIdResult = crudManager.create(new String[]{"2", "2", "Another Movie", "4.5", "Comedy"});
+        assertFalse(duplicateIdResult, "The record creation should fail due to duplicate ID.");
+    }
+
+    @Test
+    void createRecordWithDuplicateUserIdAndMovie()
+    {
+        crudManager.create(new String[]{"2", "1", "Unknown Movie", "3.2", "Action|Drama"});
+        // Attempt to create another record with the same user ID and movie name
+        boolean duplicateUserMovieResult = crudManager.create(new String[]{"3", "1", "Unknown Movie", "4.0", "Action|Drama"});
+        assertFalse(duplicateUserMovieResult, "The record creation should fail due to duplicate user ID and movie name combination.");
+    }
+
+    @Test
     void deleteNonExistentRecord() {
         boolean result = crudManager.delete(2);  // Trying to delete a non-existing record
         assertFalse(result, "The deletion should fail because the record does not exist.");
@@ -53,20 +77,4 @@ class CrudManagerIT {
         assertTrue(result, "The record should be successfully deleted.");
     }
 
-    @Test
-    void updateNonExistentRecord() {
-        boolean result = crudManager.update(new String[]{"2", "1", "Nonexistent Movie", "4.0", "Action|Drama"});
-        assertFalse(result, "The update should fail because the record does not exist.");
-    }
-
-    @Test
-    void createRecordWithDuplicateIdOrUserMovie() {
-        // Attempt to create another record with the same ID
-        boolean duplicateIdResult = crudManager.create(new String[]{"1", "2", "Another Movie", "4.5", "Comedy"});
-        assertFalse(duplicateIdResult, "The record creation should fail due to duplicate ID.");
-
-        // Attempt to create another record with the same user ID and movie name
-        boolean duplicateUserMovieResult = crudManager.create(new String[]{"2", "1", "Unknown Movie", "4.0", "Action|Drama"});
-        assertFalse(duplicateUserMovieResult, "The record creation should fail due to duplicate user ID and movie name combination.");
-    }
 }
